@@ -1,0 +1,1 @@
+export { default as FunctionPagePaper } from "./entrance/FunctionPagePaper";

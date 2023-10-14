@@ -1,0 +1,1 @@
+export { default as AnimateButton } from "./extended/AnimateButton";
