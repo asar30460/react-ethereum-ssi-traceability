@@ -1,17 +1,39 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { MetaMaskProvider } from "@metamask/sdk-react";
 
-import "@fontsource/roboto"; // Defaults to weight 400
-import "@fontsource/roboto/400.css"; // Specify weight
-import "@fontsource/roboto/400-italic.css"; // Specify weight and style
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
-    <App />
+    <MetaMaskProvider
+      debug={false}
+      sdkOptions={{
+        logging: {
+          developerMode: false,
+        },
+        communicationServerUrl: process.env.REACT_APP_COMM_SERVER_URL,
+        checkInstallationImmediately: false, // This will automatically connect to MetaMask on page load
+        dappMetadata: {
+          name: "React Ethereum Traceability App",
+          url: window.location.host,
+        },
+      }}
+    >
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+      />
+      <App />
+    </MetaMaskProvider>
   </React.StrictMode>
 );
 

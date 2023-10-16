@@ -1,3 +1,6 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useSDK } from "@metamask/sdk-react";
 import { useTheme } from "@mui/material/styles";
 
 import {
@@ -7,16 +10,34 @@ import {
   Grid,
   useMediaQuery,
   Typography,
+  TextField,
 } from "@mui/material";
 
 import { AnimateButton } from "../../ui-components";
-import MetaMask from "../../assets/MetaMask_Fox.svg.png";
 
-const FunctionPagePaper = (props) => {
+const EntrancePaper = (props) => {
+  const navigate = useNavigate();
+  const paperType = props.PaperType;
+
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
-  const googleHandler = async () => {
-    console.error("Login");
+  const { sdk } = useSDK();
+
+  const navigateToContacts = () => {
+    navigate("/supplier");
+  };
+
+  const metamaskHandler = async () => {
+    try {
+      const accounts = await sdk?.connect();
+      navigateToContacts();
+    } catch (err) {
+      console.warn(`failed to connect..`, err);
+    }
+  };
+
+  const queryHandler = async () => {
+    console.error("Direct to queryPage");
   };
 
   return (
@@ -29,16 +50,14 @@ const FunctionPagePaper = (props) => {
         backgroundColor: "#fff",
       }}
     >
-      <div class="container">
-        <div class="image">
-          <img
-            src={props.PageIcon}
-            alt="Manufacturer"
-            width={64}
-            height={64}
-            style={{ marginRight: matchDownSM ? 8 : 16 }}
-          />
-        </div>
+      <div className="container">
+        <img
+          src={props.PaperIcon}
+          alt={props.PaperIconAlt}
+          width={64}
+          height={64}
+          style={{ marginRight: matchDownSM ? 8 : 16 }}
+        />
         <Typography
           variant="h5"
           fontWeight={"bold"}
@@ -62,7 +81,23 @@ const FunctionPagePaper = (props) => {
           fontWeight={"bold"}
           textAlign={matchDownSM ? "center" : "inherit"}
         >
-          {props.Description}
+          {paperType === "supplier" ? (
+            <div style={{ padding: "26px", textAlign: "center" }}>
+              驗證你的身分以繼續
+            </div>
+          ) : (
+            <>
+              <TextField
+                fullWidth
+                label="產品編號"
+                margin="normal"
+                name="lname"
+                type="text"
+                defaultValue=""
+                sx={{ ...theme.typography.customInput }}
+              />
+            </>
+          )}
         </Typography>
       </Grid>
       <Grid container direction="column" justifyContent="center" spacing={2}>
@@ -71,25 +106,27 @@ const FunctionPagePaper = (props) => {
             <Button
               variant="outlined"
               fullWidth
-              onClick={googleHandler}
+              onClick={
+                paperType === "supplier" ? metamaskHandler : queryHandler
+              }
               size="large"
               sx={{
                 mt: 1,
                 color: "grey.800",
-                backgroundColor: theme.palette.grey[50],
-                borderColor: theme.palette.grey[100],
+                backgroundColor: "#eeeeee",
+                borderColor: "#e0e0e0",
               }}
             >
               <Box sx={{ mr: { xs: 2, sm: 2, width: 20 } }}>
                 <img
-                  src={MetaMask}
-                  alt="MetaMask"
+                  src={props.ButtonIcon}
+                  alt={""}
                   width={32}
                   height={32}
                   style={{ marginRight: matchDownSM ? 8 : 16 }}
                 />
               </Box>
-              透過METAMASK登入
+              {props.ButtonDesc}
             </Button>
           </AnimateButton>
         </Grid>
@@ -98,4 +135,4 @@ const FunctionPagePaper = (props) => {
   );
 };
 
-export default FunctionPagePaper;
+export default EntrancePaper;
