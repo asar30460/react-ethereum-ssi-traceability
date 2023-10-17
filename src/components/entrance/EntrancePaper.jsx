@@ -9,9 +9,12 @@ import {
   Button,
   Grid,
   useMediaQuery,
+  SvgIcon,
   Typography,
   TextField,
 } from "@mui/material";
+import CottageRoundedIcon from "@mui/icons-material/CottageRounded";
+import CropFreeIcon from "@mui/icons-material/CropFree";
 
 import { AnimateButton } from "../../ui-components";
 
@@ -51,13 +54,13 @@ const EntrancePaper = (props) => {
       }}
     >
       <div className="container">
-        <img
-          src={props.PaperIcon}
-          alt={props.PaperIconAlt}
-          width={64}
-          height={64}
-          style={{ marginRight: matchDownSM ? 8 : 16 }}
-        />
+        <SvgIcon fontSize="large" sx={{ mr: 1 }}>
+          {props.PaperType === "supplier" ? (
+            <CottageRoundedIcon sx={{ color: "#237A4E" }} />
+          ) : (
+            <CropFreeIcon />
+          )}
+        </SvgIcon>
         <Typography
           variant="h5"
           fontWeight={"bold"}
@@ -72,6 +75,7 @@ const EntrancePaper = (props) => {
           gutterBottom
           color={"#2F7A4F"}
           variant={"h6"}
+          sx={{ mt: 1 }}
         >
           {props.Instruction}
         </Typography>

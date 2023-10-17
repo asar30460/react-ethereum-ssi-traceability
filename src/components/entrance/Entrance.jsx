@@ -1,10 +1,8 @@
 import { Paper, Stack, Typography } from "@mui/material";
-import { EntrancePaper } from "../";
-
-import Manufacturer from "../../assets/manufacturer.svg";
-import Barcode from "../../assets/barcode.svg";
-import MetaMask from "../../assets/MetaMask_Fox.svg.png";
+import MetaMask from "../../assets/MetaMask_Fox.svg";
 import SearchIcon from "../../assets/searchIcon.svg";
+
+import { EntrancePaper } from "../";
 
 const Entrance = () => {
   return (
@@ -31,17 +29,13 @@ const Entrance = () => {
       >
         <EntrancePaper
           PaperType={"supplier"}
-          PaperIcon={Manufacturer}
-          PaperIconAlt={"Manufacturer"}
           PageName={"供應商管理"}
           Instruction={"登入"}
           ButtonIcon={MetaMask}
           ButtonDesc={"透過METAMASK登入"}
         />
         <EntrancePaper
-          PaperType={"traceability"}
-          PaperIcon={Barcode}
-          PaperIconAlt={"Barcode"}
+          PaperType={"client"}
           PageName={"產銷履歷查詢"}
           Instruction={"輸入編號"}
           ButtonIcon={SearchIcon}

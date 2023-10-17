@@ -1,5 +1,4 @@
 import { useSDK } from "@metamask/sdk-react";
-import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import "../../App.css";
 
@@ -7,11 +6,6 @@ export const Home = () => {
   const [account, setAccount] = useState();
   const [response, setResponse] = useState("");
   const { sdk, connected, connecting, provider, chainId } = useSDK();
-
-  const navigate = useNavigate();
-  const navigateToContacts = () => {
-    navigate("/");
-  };
 
   const connect = async () => {
     try {
@@ -158,12 +152,6 @@ export const Home = () => {
     }
   };
 
-  const terminate = () => {
-    sdk?.terminate();
-    alert("你已登出");
-    navigateToContacts();
-  };
-
   const changeNetwork = async (hexChainId) => {
     console.debug(`switching to network chainId=${hexChainId}`);
     try {
@@ -216,13 +204,6 @@ export const Home = () => {
           Add ethereum chain
         </button>
       </div>
-
-      <button
-        style={{ padding: 10, margin: 10, backgroundColor: "red" }}
-        onClick={terminate}
-      >
-        Terminate
-      </button>
 
       {connected && (
         <div>
