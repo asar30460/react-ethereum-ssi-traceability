@@ -4,7 +4,7 @@ import SearchIcon from "../../assets/searchIcon.svg";
 
 import { EntrancePaper } from "../";
 
-const Entrance = () => {
+const Entrance = ({onLogin}) => {
   return (
     <Paper
       sx={{
@@ -33,6 +33,7 @@ const Entrance = () => {
           Instruction={"登入"}
           ButtonIcon={MetaMask}
           ButtonDesc={"透過METAMASK登入"}
+          
         />
         <EntrancePaper
           PaperType={"client"}

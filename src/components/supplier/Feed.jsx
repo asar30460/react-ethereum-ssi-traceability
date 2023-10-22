@@ -2,7 +2,7 @@ import { useSDK } from "@metamask/sdk-react";
 import React, { useState } from "react";
 import "../../App.css";
 
-export const Home = () => {
+export const Feed = () => {
   const [account, setAccount] = useState();
   const [response, setResponse] = useState("");
   const { sdk, connected, connecting, provider, chainId } = useSDK();

@@ -27,7 +27,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import SearchIcon from "@mui/icons-material/Search";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import { Transitions, MainCard } from "../../../../ui-components";
+import { Transitions, MainCard } from "../../../";
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -49,7 +49,7 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
-  const { sdk, connected, connecting} = useSDK();
+  const { sdk, connected } = useSDK();
 
   const handleListItemClick = (event, index, route = "") => {
     setSelectedIndex(index);
@@ -75,15 +75,14 @@ const ProfileSection = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   useEffect(() => {}, []);
 
-  const navigateToEntrance = () => {
-    navigate("/");
-  };
-  
+  // Router handlers
   const terminate = () => {
     sdk?.terminate();
     alert("你已登出");
-    navigateToEntrance();
+    navigate("/");
   };
+
+  if (!connected) navigate("/invalid-login");
 
   return (
     <>
@@ -168,19 +167,18 @@ const ProfileSection = () => {
                     <Stack sx={{ mb: 1 }}>
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography
-                          variant="h4"
-                          fontSize={"1rem"}
-                          fontWeight={"bold"}
+                          component="span"
+                          fontWeight="bold"
+                          variant="subtitle2"
                         >
-                          Good Morning,
+                          連線帳戶:
                         </Typography>
                         <Typography
-                          component="span"
                           variant="h4"
-                          sx={{ fontWeight: 400 }}
-                          fontSize={"1rem"}
+                          fontSize="1rem"
+                          fontWeight="bold"
                         >
-                          Johne Doe
+                          accounts?.[0]
                         </Typography>
                       </Stack>
                       <Typography variant="subtitle2">Project Admin</Typography>

@@ -15,7 +15,7 @@ const LogoSection = () => {
       disableRipple
       onClick={() => returnToHome}
       component={Link}
-      to="./supplier"
+      to="."
     >
       <CottageRoundedIcon sx={{ fontSize: 30, color: "#237A4E" }} />
       <Typography
@@ -24,7 +24,7 @@ const LogoSection = () => {
         letterSpacing={-1}
         gutterBottom
         color={"black"}
-        sx={{ ml:0.5, mt: 1.5 }}
+        sx={{ ml: 0.5, mt: 1.5 }}
       >
         供應商管理
       </Typography>

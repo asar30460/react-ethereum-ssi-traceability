@@ -1,20 +1,31 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useSDK } from "@metamask/sdk-react";
 import "./App.css";
-import { Header, Entrance, Home } from "./components";
+
+import { Entrance, Header, Feed } from "./components";
 
 const App = () => {
+  const { connected } = useSDK();
+
   return (
     <div className="App">
       <header className="App-header">
         <BrowserRouter>
-          {/* {window.location.pathname === "/" ? (
-          ) : ()} */}
-          <Header />
           <Routes>
             <Route path="/" element={<Entrance />} />
-            <Route path="/supplier" element={<Home />} />
+            <Route
+              path="supplier"
+              element={
+                connected ? (
+                  <>
+                    <Header />
+                    <Feed />
+                  </>
+                ) : (
+                  <Navigate replace to=".." />
+                )
+              }
+            />
           </Routes>
         </BrowserRouter>
       </header>

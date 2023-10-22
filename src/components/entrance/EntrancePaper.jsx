@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSDK } from "@metamask/sdk-react";
 import { useTheme } from "@mui/material/styles";
@@ -16,7 +15,7 @@ import {
 import CottageRoundedIcon from "@mui/icons-material/CottageRounded";
 import CropFreeIcon from "@mui/icons-material/CropFree";
 
-import { AnimateButton } from "../../ui-components";
+import { AnimateButton } from "../";
 
 const EntrancePaper = (props) => {
   const navigate = useNavigate();
