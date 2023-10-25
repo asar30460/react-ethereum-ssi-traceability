@@ -23,7 +23,7 @@ const LogoSection = () => {
         fontWeight={"bold"}
         letterSpacing={-1}
         gutterBottom
-        color={"black"}
+        color={"#F8FAFC"}
         sx={{ ml: 0.5, mt: 1.5 }}
       >
         供應商管理

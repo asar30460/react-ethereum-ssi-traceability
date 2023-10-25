@@ -1,20 +1,11 @@
 import { useSDK } from "@metamask/sdk-react";
 import React, { useState } from "react";
-import "../../App.css";
 
-export const Feed = () => {
-  const [account, setAccount] = useState();
+import { Box } from "@mui/material";
+
+const Feed = () => {
   const [response, setResponse] = useState("");
-  const { sdk, connected, connecting, provider, chainId } = useSDK();
-
-  const connect = async () => {
-    try {
-      const accounts = await sdk?.connect();
-      setAccount(accounts?.[0]);
-    } catch (err) {
-      console.warn(`failed to connect..`, err);
-    }
-  };
+  const { connected, connecting, provider, chainId } = useSDK();
 
   const addEthereumChain = () => {
     if (!provider) {
@@ -166,56 +157,72 @@ export const Feed = () => {
   };
 
   return (
-    <div className="App">
-      <div className="sdkConfig">
-        {connecting && (
-          <div>Waiting for Metamask to link the connection...</div>
-        )}
-      </div>
+    <div style={{ width: "100%", zIndex: 3 }}>
+      <Box
+        sx={{
+          p: 1,
+          borderRadius: 2,
+          backgroundColor: "#223540",
+          height: { xs: "91vh", md: "90vh" },
+          width: { xs: "90%", md: "96%" },
+        }}
+      >
+        <Box>
+          <div className="App">
+            <div className="sdkConfig">
+              {connecting && (
+                <div>Waiting for Metamask to link the connection...</div>
+              )}
+            </div>
 
-      <div>
-        <button style={{ padding: 10, margin: 10 }} onClick={connect}>
-          Request Accounts
-        </button>
+            <div>
+              <button style={{ padding: 10, margin: 10 }} onClick={sign}>
+                Sign
+              </button>
 
-        <button style={{ padding: 10, margin: 10 }} onClick={sign}>
-          Sign
-        </button>
+              <button
+                style={{ padding: 10, margin: 10 }}
+                onClick={sendTransaction}
+              >
+                Send transaction
+              </button>
 
-        <button style={{ padding: 10, margin: 10 }} onClick={sendTransaction}>
-          Send transaction
-        </button>
+              <button
+                style={{ padding: 10, margin: 10 }}
+                onClick={() => changeNetwork("0x1")}
+              >
+                Switch Ethereum
+              </button>
 
-        <button
-          style={{ padding: 10, margin: 10 }}
-          onClick={() => changeNetwork("0x1")}
-        >
-          Switch Ethereum
-        </button>
+              <button
+                style={{ padding: 10, margin: 10 }}
+                onClick={() => changeNetwork("0x89")}
+              >
+                Switch Polygon
+              </button>
 
-        <button
-          style={{ padding: 10, margin: 10 }}
-          onClick={() => changeNetwork("0x89")}
-        >
-          Switch Polygon
-        </button>
+              <button
+                style={{ padding: 10, margin: 10 }}
+                onClick={addEthereumChain}
+              >
+                Add ethereum chain
+              </button>
+            </div>
 
-        <button style={{ padding: 10, margin: 10 }} onClick={addEthereumChain}>
-          Add ethereum chain
-        </button>
-      </div>
-
-      {connected && (
-        <div>
-          <>
-            {chainId && `Connected chain: ${chainId}`}
-            <p></p>
-            {account && `Connected account: ${account}`}
-            <p></p>
-            {response && `Last request response: ${response}`}
-          </>
-        </div>
-      )}
+            {connected && (
+              <div>
+                <>
+                  {chainId && `Connected chain: ${chainId}`}
+                  <p></p>
+                  {response && `Last request response: ${response}`}
+                </>
+              </div>
+            )}
+          </div>
+        </Box>
+      </Box>
     </div>
   );
 };
+
+export default Feed;

@@ -27,13 +27,13 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import SearchIcon from "@mui/icons-material/Search";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import { Transitions, MainCard } from "../../../";
+import { Transitions } from "../../..";
 
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
+  // Page handlers
   const theme = useTheme();
-  const navigate = useNavigate();
 
   const [notification, setNotification] = useState(false);
   const [open, setOpen] = useState(false);
@@ -48,8 +48,6 @@ const ProfileSection = () => {
     }
     setOpen(false);
   };
-
-  const { sdk, connected } = useSDK();
 
   const handleListItemClick = (event, index, route = "") => {
     setSelectedIndex(index);
@@ -73,65 +71,58 @@ const ProfileSection = () => {
   }, [open]);
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  useEffect(() => {}, []);
+
+  // MetaMask SDK handlers
+  const { sdk } = useSDK();
+  const accounts = sdk?.connect();
+  const [account, setAccount] = useState(accounts?.[0]);
+  const getAccount = async () => {
+    const accounts = await sdk?.connect();
+    setAccount(accounts?.[0]);
+  };
+  useEffect(() => {
+    getAccount();
+  }, []);
 
   // Router handlers
+  const navigate = useNavigate();
+
   const terminate = () => {
     sdk?.terminate();
     alert("你已登出");
     navigate("/");
   };
 
-  if (!connected) navigate("/invalid-login");
-
   return (
     <>
       <Chip
         sx={{
           height: "48px",
+          width: "84px",
           alignItems: "center",
+          justifyContent: "space-around",
           borderRadius: "27px",
           transition: "all .2s ease-in-out",
-          borderColor: theme.palette.grey[100],
-          backgroundColor: theme.palette.grey[100],
+          backgroundColor: theme.palette.grey[500],
           '&[aria-controls="menu-list-grow"], &:hover': {
-            borderColor: theme.palette.success.main,
             background: `${theme.palette.success.main}!important`,
             color: theme.palette.grey[100],
-            "& svg": {
-              stroke: theme.palette.grey[100],
-            },
           },
           "& .MuiChip-label": {
             lineHeight: 0,
           },
         }}
-        icon={
-          <Avatar
-            src={PersonIcon}
-            sx={{
-              ...theme.typography.mediumAvatar,
-              margin: "8px 0 8px 8px !important",
-              cursor: "pointer",
-            }}
-            ref={anchorRef}
-            aria-controls={open ? "menu-list-grow" : undefined}
-            aria-haspopup="true"
-            color="inherit"
-          />
+        avatar={
+          <Avatar sx={{ minHeight: 36, minWidth: 36 }}>
+            <PersonIcon />
+          </Avatar>
         }
-        label={
-          <SettingsIcon
-            stroke={1.5}
-            size="1.5rem"
-            color={theme.palette.success.light}
-          />
-        }
-        variant="outlined"
+        label={<SettingsIcon />}
         ref={anchorRef}
         aria-controls={open ? "menu-list-grow" : undefined}
         aria-haspopup="true"
         onClick={handleToggle}
+        variant="outlined"
         color="success"
       />
       <Popper
@@ -156,13 +147,7 @@ const ProfileSection = () => {
           <Transitions in={open} {...TransitionProps}>
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
-                <MainCard
-                  border={false}
-                  elevation={16}
-                  content={false}
-                  boxShadow
-                  shadow={theme.shadows[16]}
-                >
+                <Card elevation={16} shadow={theme.shadows[16]}>
                   <Box sx={{ px: 2, pt: 2 }}>
                     <Stack sx={{ mb: 1 }}>
                       <Stack direction="row" spacing={0.5} alignItems="center">
@@ -178,10 +163,12 @@ const ProfileSection = () => {
                           fontSize="1rem"
                           fontWeight="bold"
                         >
-                          accounts?.[0]
+                          {account.substr(0, 5)}...{account.substr(-4, 4)}
                         </Typography>
                       </Stack>
-                      <Typography variant="subtitle2">Project Admin</Typography>
+                      <Typography variant="subtitle2" align="left">
+                        Project Admin
+                      </Typography>
                     </Stack>
 
                     <Divider />
@@ -196,7 +183,7 @@ const ProfileSection = () => {
                         }}
                       >
                         <Typography variant="subtitle2" sx={{ pt: 0.3, mr: 7 }}>
-                          Allow Notifications
+                          允許通知
                         </Typography>
                         <Switch
                           checked={notification}
@@ -214,7 +201,7 @@ const ProfileSection = () => {
                       sx={{
                         width: "100%",
                         maxWidth: 350,
-                        minWidth: 250,
+                        minWidth: 150,
                         backgroundColor: theme.palette.background.paper,
                         borderRadius: "10px",
                         [theme.breakpoints.down("md")]: {
@@ -234,9 +221,7 @@ const ProfileSection = () => {
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography variant="body2">
-                              Customized Settings
-                            </Typography>
+                            <Typography variant="body2">設定</Typography>
                           }
                         />
                       </ListItemButton>
@@ -253,13 +238,13 @@ const ProfileSection = () => {
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography variant="body2">Logout</Typography>
+                            <Typography variant="body2">登出</Typography>
                           }
                         />
                       </ListItemButton>
                     </List>
                   </Box>
-                </MainCard>
+                </Card>
               </ClickAwayListener>
             </Paper>
           </Transitions>

@@ -44,6 +44,7 @@ const EntrancePaper = (props) => {
 
   return (
     <Paper
+      elevation={3}
       sx={{
         p: 4,
         margin: "auto",
