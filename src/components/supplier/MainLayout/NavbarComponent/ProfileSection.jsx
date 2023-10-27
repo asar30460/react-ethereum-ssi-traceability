@@ -82,7 +82,7 @@ const ProfileSection = () => {
   };
   useEffect(() => {
     getAccount();
-  }, []);
+  });
 
   // Router handlers
   const navigate = useNavigate();

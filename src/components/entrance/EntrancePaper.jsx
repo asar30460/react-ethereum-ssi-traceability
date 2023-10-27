@@ -1,3 +1,4 @@
+import { useSDK } from "@metamask/sdk-react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
@@ -22,6 +23,7 @@ const EntrancePaper = (props) => {
 
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
+  const { sdk } = useSDK();
 
   const navigateToContacts = () => {
     navigate("/supplier");
@@ -29,6 +31,7 @@ const EntrancePaper = (props) => {
 
   const metamaskHandler = async () => {
     try {
+      await sdk?.connect();
       navigateToContacts();
     } catch (err) {
       console.warn(`failed to connect..`, err);
