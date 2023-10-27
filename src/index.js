@@ -1,16 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { MetaMaskProvider } from "@metamask/sdk-react";
 
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const styleOverrides = {
+  styleOverrides: {
+    root: {
+      fontFamily: "Noto Serif TC",
+    },
+  },
+};
+const theme = createTheme({
+  components: {
+    MuiTypography: styleOverrides,
+    MuiButton: styleOverrides,
+  },
+});
 
 root.render(
   <React.StrictMode>
@@ -28,11 +38,9 @@ root.render(
         },
       }}
     >
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
-      />
-      <App />
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
     </MetaMaskProvider>
   </React.StrictMode>
 );

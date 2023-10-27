@@ -4,7 +4,7 @@ import { Paper, Stack, Typography } from "@mui/material";
 import MetaMask from "../../assets/MetaMask_Fox.svg";
 import SearchIcon from "../../assets/searchIcon.svg";
 
-import { EntrancePaper } from "../";
+import { EntrancePaper } from "..";
 
 const Entrance = () => {
   return (

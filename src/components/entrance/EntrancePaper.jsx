@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useSDK } from "@metamask/sdk-react";
 import { useTheme } from "@mui/material/styles";
 
 import {
@@ -15,7 +14,7 @@ import {
 import CottageRoundedIcon from "@mui/icons-material/CottageRounded";
 import CropFreeIcon from "@mui/icons-material/CropFree";
 
-import { AnimateButton } from "../";
+import { AnimateButton } from "..";
 
 const EntrancePaper = (props) => {
   const navigate = useNavigate();
@@ -23,7 +22,6 @@ const EntrancePaper = (props) => {
 
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
-  const { sdk } = useSDK();
 
   const navigateToContacts = () => {
     navigate("/supplier");
@@ -31,7 +29,6 @@ const EntrancePaper = (props) => {
 
   const metamaskHandler = async () => {
     try {
-      const accounts = await sdk?.connect();
       navigateToContacts();
     } catch (err) {
       console.warn(`failed to connect..`, err);
@@ -98,7 +95,8 @@ const EntrancePaper = (props) => {
                 name="lname"
                 type="text"
                 defaultValue=""
-                sx={{ ...theme.typography.customInput }}
+                InputLabelProps={{ style: { fontFamily: "Noto Serif TC" } }}
+                inputProps={{ style: { fontFamily: "Noto Serif TC" } }}
               />
             </>
           )}

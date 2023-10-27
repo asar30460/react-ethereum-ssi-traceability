@@ -30,30 +30,14 @@ const Navbar = ({ setcollapsed, collapsed }) => {
           }}
         >
           <Toolbar>
-            <Grid container spacing={0}>
+            <Grid container>
               <Grid item={true} xs={6}>
-                <Box
-                  sx={{
-                    width: 228,
-                    display: "flex",
-                    [theme.breakpoints.down("md")]: {
-                      width: "auto",
-                    },
-                  }}
-                >
-                  <Box
-                    component="span"
-                    sx={{ display: { xs: "none", md: "block" }, mr: 3 }}
-                  >
-                    <LogoSection />
-                  </Box>
-
-                  <ButtonBase sx={{ borderRadius: "12px", overflow: "hidden" }}>
+                <Box>
+                  <LogoSection />
+                  <ButtonBase>
                     <Avatar
                       variant="rounded"
                       sx={{
-                        ...theme.typography.commonAvatar,
-                        ...theme.typography.mediumAvatar,
                         transition: "all .2s ease-in-out",
                         background: "#B5EBCD",
                         color: theme.palette.success.main,
@@ -61,7 +45,6 @@ const Navbar = ({ setcollapsed, collapsed }) => {
                           background: theme.palette.success.light,
                           color: "#FFF",
                         },
-                        my: 0.5,
                       }}
                       onClick={() => {
                         setcollapsed(!collapsed);
@@ -73,6 +56,7 @@ const Navbar = ({ setcollapsed, collapsed }) => {
                   </ButtonBase>
                 </Box>
               </Grid>
+
               <Grid item={true} xs={6} container justifyContent="flex-end">
                 <ProfileSection />
               </Grid>

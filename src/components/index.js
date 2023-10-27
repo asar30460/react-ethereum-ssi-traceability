@@ -1,9 +1,9 @@
 // Entrance
-export { default as EntrancePaper } from "./Entrance/EntrancePaper";
-export { default as Entrance } from "./Entrance/Entrance";
+export { default as EntrancePaper } from "./entrance/EntrancePaper";
+export { default as Entrance } from "./entrance/Entrance";
 
 // Supplier
-export { default as SupplierPage } from "./Supplier";
+export { default as SupplierPage } from "./supplier";
 
 // ui-component
 export { default as AnimateButton } from "./ui-components/extended/AnimateButton";

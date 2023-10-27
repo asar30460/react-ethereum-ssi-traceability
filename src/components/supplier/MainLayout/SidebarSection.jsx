@@ -36,7 +36,7 @@ const SidebarSection = ({
         </Typography>
         <Divider variant="middle" sx={{ backgroundColor: "#FFF", mb: 1 }} />
         {general.map((general) => (
-          <Link to={`${general.link}`}>
+          <Link key={general.link} to={`${general.link}`}>
             <AnimateButton>
               <Button
                 variant="outlined"
@@ -79,7 +79,7 @@ const SidebarSection = ({
         </Typography>
         <Divider variant="middle" sx={{ backgroundColor: "#FFF", mb: 1 }} />
         {advanced.map((advanced) => (
-          <Link to={`${advanced.link}`}>
+          <Link key={advanced.link} to={`${advanced.link}`}>
             <AnimateButton>
               <Button
                 variant="outlined"

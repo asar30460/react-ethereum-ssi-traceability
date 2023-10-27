@@ -16,6 +16,7 @@ const LogoSection = () => {
       onClick={() => returnToHome}
       component={Link}
       to="."
+      sx={{ display: { xs: "none", md: "inline-flex" }, mr: 2 }}
     >
       <CottageRoundedIcon sx={{ fontSize: 30, color: "#237A4E" }} />
       <Typography

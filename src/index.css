@@ -1,12 +1,16 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Serif+TC");
+
 body {
-  background-color: #1B2A32;
+  background-color: #1b2a32;
   color: #f8fafc;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Noto Serif TC";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: "Noto Serif TC";
 }
 
 code {
