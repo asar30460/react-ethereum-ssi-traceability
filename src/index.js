@@ -9,16 +9,28 @@ import { MetaMaskProvider } from "@metamask/sdk-react";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const styleOverrides = {
-  styleOverrides: {
-    root: {
-      fontFamily: "Noto Serif TC",
+  font: {
+    styleOverrides: {
+      root: {
+        fontFamily: "Noto Serif TC",
+      },
+    },
+  },
+  tableCell: {
+    styleOverrides: {
+      root: {
+        color: "#E0E0E0",
+        fontFamily: "Noto Serif TC",
+        borderBottom: "1px solid #E0E0E0",
+      },
     },
   },
 };
 const theme = createTheme({
   components: {
-    MuiTypography: styleOverrides,
-    MuiButton: styleOverrides,
+    MuiTypography: styleOverrides.font,
+    MuiButton: styleOverrides.font,
+    MuiTableCell: styleOverrides.tableCell,
   },
 });
 

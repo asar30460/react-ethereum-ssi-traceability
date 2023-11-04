@@ -48,6 +48,7 @@ const EntrancePaper = (props) => {
       sx={{
         p: 4,
         margin: "auto",
+        width: "240px",
         maxHeight: "auto",
         flexGrow: 1,
         backgroundColor: "#fff",
