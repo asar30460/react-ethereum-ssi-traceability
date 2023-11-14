@@ -9,5 +9,5 @@ export { default as SupplierPage } from "./supplier";
 export { default as AnimateButton } from "./ui-components/extended/AnimateButton";
 export { default as Transitions } from "./ui-components/extended/Transitions";
 
-// assets
-export { navlinks } from "../constants";
+// const
+export { navlinks, RegistryContractParams } from "../constants";

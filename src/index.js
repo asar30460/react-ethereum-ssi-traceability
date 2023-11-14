@@ -31,6 +31,7 @@ const theme = createTheme({
     MuiTypography: styleOverrides.font,
     MuiButton: styleOverrides.font,
     MuiTableCell: styleOverrides.tableCell,
+    MuiTextField: styleOverrides.font,
   },
 });
 

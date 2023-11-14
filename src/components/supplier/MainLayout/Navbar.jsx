@@ -14,7 +14,7 @@ import {
 
 import { LogoSection, ProfileSection } from "./NavbarComponent";
 
-const Navbar = ({ setcollapsed, collapsed }) => {
+const Navbar = ({ setcollapsed, collapsed, setSelectedPage }) => {
   const theme = useTheme();
 
   return (
@@ -33,7 +33,8 @@ const Navbar = ({ setcollapsed, collapsed }) => {
             <Grid container>
               <Grid item={true} xs={6}>
                 <Box>
-                  <LogoSection />
+                  <LogoSection setSelectedPage={setSelectedPage} />
+
                   <ButtonBase>
                     <Avatar
                       variant="rounded"

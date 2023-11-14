@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Noto+Serif+TC");
+@import url("https://fonts.googleapis.com/css?family=Roboto");
 
 body {
   background-color: #1b2a32;
@@ -11,9 +12,4 @@ body {
 
 button {
   font-family: "Noto Serif TC";
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }

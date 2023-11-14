@@ -6,14 +6,13 @@ import CottageRoundedIcon from "@mui/icons-material/CottageRounded";
 
 // ==============================|| MAIN LOGO ||============================== //
 
-const LogoSection = () => {
-  const returnToHome = () => {
-    console.error("returnToHome");
-  };
+const LogoSection = ({ setSelectedPage }) => {
   return (
     <ButtonBase
       disableRipple
-      onClick={() => returnToHome}
+      onClick={() => {
+        setSelectedPage("");
+      }}
       component={Link}
       to="."
       sx={{ display: { xs: "none", md: "inline-flex" }, mr: 2 }}
