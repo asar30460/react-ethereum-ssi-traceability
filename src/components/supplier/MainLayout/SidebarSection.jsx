@@ -17,18 +17,23 @@ const SidebarSection = ({
       display="flex"
       flexDirection="column"
       backgroundColor="#1B2A32"
-      width={sidebarCollapsed ? "75px" : "180px"}
+      width={sidebarCollapsed ? "75px" : "160px"}
       sx={{
-        position: "sticky",
-        height: "92vh",
-        padding: "5px",
+        p: 1,
+        mr: -2,
         border: "5px solid #1B2A32",
       }}
     >
-      <Typography fontWeight={"bold"} variant="subtitle2" sx={{ ml: 2 }}>
+      <Typography fontWeight={"bold"} variant="subtitle2" sx={{ ml: 2, mt: 2 }}>
         一般
       </Typography>
-      <Divider variant="middle" sx={{ backgroundColor: "#FFF", mb: 1 }} />
+      <Divider
+        variant="middle"
+        sx={{
+          mb: 1,
+          backgroundColor: "#FFF",
+        }}
+      />
       {general.map((general) => (
         <Link key={general.link} to={`${general.link}`}>
           <Button
@@ -36,6 +41,7 @@ const SidebarSection = ({
             onClick={() => setSelectedPage(general.link)}
             size="large"
             sx={{
+              px: 2,
               mb: 1,
               color: "#eeeeee",
               borderColor:
@@ -62,10 +68,16 @@ const SidebarSection = ({
           </Button>
         </Link>
       ))}
-      <Typography fontWeight={"bold"} variant="subtitle2" sx={{ mt: 2, ml: 2 }}>
+      <Typography fontWeight={"bold"} variant="subtitle2" sx={{ ml: 2, mt: 2 }}>
         進階
       </Typography>
-      <Divider variant="middle" sx={{ backgroundColor: "#FFF", mb: 1 }} />
+      <Divider
+        variant="middle"
+        sx={{
+          mb: 1,
+          backgroundColor: "#FFF",
+        }}
+      />
       {advanced.map((advanced) => (
         <Link key={advanced.link} to={`${advanced.link}`}>
           <Button
@@ -73,6 +85,7 @@ const SidebarSection = ({
             onClick={() => setSelectedPage(advanced.link)}
             size="large"
             sx={{
+              px: 2,
               mb: 1,
               color: "#eeeeee",
               borderColor:
@@ -103,7 +116,7 @@ const SidebarSection = ({
               onClick={() => setSelectedPage(dev.link)}
               size="large"
               sx={{
-                mb: 1,
+                px: 2,
                 backgroundColor: "#FA433B",
                 borderColor: dev.link === selectedPage ? "#FA433B" : "#1B2A32",
                 color: "#eeeeee",

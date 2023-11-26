@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSDK } from "@metamask/sdk-react";
 import { ethers } from "ethers";
 
-import { Stack } from "@mui/material";
+import { Box } from "@mui/material";
 
 import Navbar from "./MainLayout/Navbar";
 import SidebarSection from "./MainLayout/SidebarSection";
@@ -61,36 +61,49 @@ const SupplierPage = () => {
         collapsed={collapsed}
         setSelectedPage={setSelectedPage}
       />
-
-      <Stack
-        direction="row"
-        alignItems="flex-start"
-        justifyContent="flex-start"
-        spacing={-1}
-      >
-        <SidebarSection
-          selectedPage={selectedPage}
-          setSelectedPage={setSelectedPage}
-          sidebarCollapsed={collapsed}
-        />
-        <Routes>
-          <Route path="" element={<Feed ethersInfo={ethersInfo} />} />
-          <Route
-            path="/ssi-management"
-            element={<SSI ethersSigner={ethersSigner} />}
+      <div style={{ width: "100%" }}>
+        <Box
+          sx={{
+            display: "flex",
+            height: `calc(100vh - 64px)`,
+          }}
+        >
+          <SidebarSection
+            selectedPage={selectedPage}
+            setSelectedPage={setSelectedPage}
+            sidebarCollapsed={collapsed}
           />
-          <Route path="/project" element={<Peoject />} />
-          <Route
-            path="/dev"
-            element={
-              <Dev
-                ethersSigner={ethersSigner}
-                ethersProvider={ethersProvider}
+          <Box
+            sx={{
+              display: "flex",
+              flexGrow: 1,
+              zIndex: 3,
+              p: 2,
+              borderRadius: 3,
+              backgroundColor: selectedPage === "dev" ? "#1B2A32" : "#223540",
+              border: selectedPage === "dev" ? "1px solid #7D231E" : "0px",
+            }}
+          >
+            <Routes>
+              <Route path="" element={<Feed ethersInfo={ethersInfo} />} />
+              <Route
+                path="/ssi-management"
+                element={<SSI ethersSigner={ethersSigner} />}
               />
-            }
-          />
-        </Routes>
-      </Stack>
+              <Route path="/project" element={<Peoject />} />
+              <Route
+                path="/dev"
+                element={
+                  <Dev
+                    ethersSigner={ethersSigner}
+                    ethersProvider={ethersProvider}
+                  />
+                }
+              />
+            </Routes>
+          </Box>
+        </Box>
+      </div>
     </>
   );
 };

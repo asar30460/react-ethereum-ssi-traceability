@@ -25,13 +25,25 @@ const styleOverrides = {
       },
     },
   },
+  textField: {
+    styleOverrides: {
+      root: {
+        label: {
+          fontFamily: "Noto Serif TC",
+        },
+        input: {
+          fontFamily: "Noto Serif TC",
+        },
+      },
+    },
+  },
 };
 const theme = createTheme({
   components: {
     MuiTypography: styleOverrides.font,
     MuiButton: styleOverrides.font,
     MuiTableCell: styleOverrides.tableCell,
-    MuiTextField: styleOverrides.font,
+    MuiTextField: styleOverrides.textField,
   },
 });
 

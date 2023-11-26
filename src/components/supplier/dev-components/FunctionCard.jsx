@@ -29,6 +29,7 @@ const FunctionCard = ({
       sx={{
         display: "flex",
         flexDirection: "column",
+        height: "207px",
         backgroundColor: "#223540",
         color: "#E0E0E0",
         borderRadius: 2,
@@ -39,7 +40,7 @@ const FunctionCard = ({
         <Typography fontWeight="bold" variant="subtitle1" sx={{ mb: 2 }}>
           {cardHeader}
           {isDIDFunction ? (
-            <Tooltip title="顯示該圖示表示此函式與DID相關" sx={{ pl: -0.5 }}>
+            <Tooltip title="此函式與DID相關" sx={{ pl: -0.5 }}>
               <PersonPinIcon color="info" fontSize="small" />
             </Tooltip>
           ) : null}
@@ -51,7 +52,6 @@ const FunctionCard = ({
       <Container
         style={{
           marginTop: "auto",
-          marginRight: 10,
           display: "flex",
           justifyContent: "flex-end",
         }}
@@ -63,6 +63,7 @@ const FunctionCard = ({
             disabled={loading}
             onClick={onClick}
             sx={{
+              mr: -1,
               backgroundColor: "#1b2a32",
               color: "#E0E0E0",
               borderColor: theme.palette.primary.main,
@@ -82,6 +83,7 @@ const FunctionCard = ({
             disabled={loading}
             onClick={onClick}
             sx={{
+              mr: -1,
               backgroundColor: "#1b2a32",
               color: "#E0E0E0",
               borderColor: "#D84315",
