@@ -1,2 +1,5 @@
 export { default as DialogCreateSSI } from "./DialogCreateSSI";
-export { documentResolver } from "./documentResolver";
+export {
+  documentResolver,
+  queryDIDOwnerChangedEvents,
+} from "./documentResolver";

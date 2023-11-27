@@ -65,7 +65,7 @@ const SupplierPage = () => {
         <Box
           sx={{
             display: "flex",
-            height: `calc(100vh - 64px)`,
+            height: { xs: `calc(100vh - 56px)`, sm: `calc(100vh - 64px)` },
           }}
         >
           <SidebarSection
@@ -74,12 +74,15 @@ const SupplierPage = () => {
             sidebarCollapsed={collapsed}
           />
           <Box
+            alignItems="flex-start"
             sx={{
               display: "flex",
-              flexGrow: 1,
               zIndex: 3,
+              flexGrow: 0.98,
+              overflow: "auto",
               p: 2,
-              borderRadius: 3,
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
               backgroundColor: selectedPage === "dev" ? "#1B2A32" : "#223540",
               border: selectedPage === "dev" ? "1px solid #7D231E" : "0px",
             }}

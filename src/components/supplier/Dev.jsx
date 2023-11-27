@@ -185,245 +185,243 @@ const Dev = ({ ethersSigner, ethersProvider }) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box>
-        <Stack direction="row" flexWrap="wrap" gap={2} alignItems="flex-start">
-          <FunctionCard
-            isDIDFunction
-            cardHeader={"部署「DID Registry」合約"}
-            cardContent={
-              <>
-                <ButtonBase
-                  onClick={() => {
-                    setDialogTitle("Contract Ethereum DID Registry");
-                    setDialogContent(
-                      <DialogContent
-                        style={{ fontFamily: "Roboto", fontSize: "12px" }}
-                      >
-                        <CopyBlock
-                          text={RegistryContractParams["contractCode"]}
-                          language={"javascript"}
-                          showLineNumbers={true}
-                          theme={dracula}
-                          wrapLines={true}
-                          codeBlock
-                        />
-                      </DialogContent>
-                    );
-                    setOpen(true);
-                  }}
-                  sx={{
-                    borderRadius: 1,
-                    "&:hover": {
-                      backgroundColor: "transparent",
-                      color: "#2AA6BF",
-                    },
-                  }}
-                >
-                  <ArticleIcon sx={{ pr: 1 }} />
-                  檢視智慧合約
-                </ButtonBase>
-                <ButtonBase
-                  onClick={() => {
-                    setDialogTitle("bytecode");
-                    setDialogContent(
-                      <DialogContent
-                        style={{ fontFamily: "Roboto", fontSize: "12px" }}
-                      >
-                        <CopyBlock
-                          text={RegistryContractParams["bytecode"]}
-                          language={"javascript"}
-                          showLineNumbers={true}
-                          theme={dracula}
-                          wrapLines={true}
-                          codeBlock
-                        />
-                      </DialogContent>
-                    );
-                    setOpen(true);
-                  }}
-                  sx={{
-                    borderRadius: 1,
-                    "&:hover": {
-                      color: "#2AA6BF",
-                    },
-                  }}
-                >
-                  <CodeIcon sx={{ pr: 1 }} />
-                  檢視bytecode
-                </ButtonBase>
-                <ButtonBase
-                  onClick={() => {
-                    setDialogTitle(
-                      "應用程式二進制介面(Application binary interface，Abi)"
-                    );
-                    setDialogContent(
-                      <DialogContent
-                        style={{ fontFamily: "Roboto", fontSize: "12px" }}
-                      >
-                        <CopyBlock
-                          text={RegistryContractParams["abiPseudo"]}
-                          language={"javascript"}
-                          showLineNumbers={true}
-                          theme={dracula}
-                          wrapLines={true}
-                          codeBlock
-                        />
-                      </DialogContent>
-                    );
-                    setOpen(true);
-                  }}
-                  sx={{
-                    borderRadius: 1,
-                    "&:hover": {
-                      color: "#2AA6BF",
-                    },
-                  }}
-                >
-                  <SettingsIcon sx={{ pr: 1 }} />
-                  檢視abi
-                </ButtonBase>
-              </>
-            }
-            onClick={async () => {
-              setLoading(true);
-              await deployRegistryContract(
-                RegistryContractParams["abi"],
-                RegistryContractParams["bytecode"],
-                ethersSigner
-              );
-              setLoading(false);
-            }}
-            loading={loading}
-          />
+      <Stack direction="row" flexWrap="wrap" gap={2} alignItems="flex-start">
+        <FunctionCard
+          isDIDFunction
+          cardHeader={"部署「DID Registry」合約"}
+          cardContent={
+            <>
+              <ButtonBase
+                onClick={() => {
+                  setDialogTitle("Contract Ethereum DID Registry");
+                  setDialogContent(
+                    <DialogContent
+                      style={{ fontFamily: "Roboto", fontSize: "12px" }}
+                    >
+                      <CopyBlock
+                        text={RegistryContractParams["contractCode"]}
+                        language={"javascript"}
+                        showLineNumbers={true}
+                        theme={dracula}
+                        wrapLines={true}
+                        codeBlock
+                      />
+                    </DialogContent>
+                  );
+                  setOpen(true);
+                }}
+                sx={{
+                  borderRadius: 1,
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                    color: "#2AA6BF",
+                  },
+                }}
+              >
+                <ArticleIcon sx={{ pr: 1 }} />
+                檢視智慧合約
+              </ButtonBase>
+              <ButtonBase
+                onClick={() => {
+                  setDialogTitle("bytecode");
+                  setDialogContent(
+                    <DialogContent
+                      style={{ fontFamily: "Roboto", fontSize: "12px" }}
+                    >
+                      <CopyBlock
+                        text={RegistryContractParams["bytecode"]}
+                        language={"javascript"}
+                        showLineNumbers={true}
+                        theme={dracula}
+                        wrapLines={true}
+                        codeBlock
+                      />
+                    </DialogContent>
+                  );
+                  setOpen(true);
+                }}
+                sx={{
+                  borderRadius: 1,
+                  "&:hover": {
+                    color: "#2AA6BF",
+                  },
+                }}
+              >
+                <CodeIcon sx={{ pr: 1 }} />
+                檢視bytecode
+              </ButtonBase>
+              <ButtonBase
+                onClick={() => {
+                  setDialogTitle(
+                    "應用程式二進制介面(Application binary interface，Abi)"
+                  );
+                  setDialogContent(
+                    <DialogContent
+                      style={{ fontFamily: "Roboto", fontSize: "12px" }}
+                    >
+                      <CopyBlock
+                        text={RegistryContractParams["abiPseudo"]}
+                        language={"javascript"}
+                        showLineNumbers={true}
+                        theme={dracula}
+                        wrapLines={true}
+                        codeBlock
+                      />
+                    </DialogContent>
+                  );
+                  setOpen(true);
+                }}
+                sx={{
+                  borderRadius: 1,
+                  "&:hover": {
+                    color: "#2AA6BF",
+                  },
+                }}
+              >
+                <SettingsIcon sx={{ pr: 1 }} />
+                檢視abi
+              </ButtonBase>
+            </>
+          }
+          onClick={async () => {
+            setLoading(true);
+            await deployRegistryContract(
+              RegistryContractParams["abi"],
+              RegistryContractParams["bytecode"],
+              ethersSigner
+            );
+            setLoading(false);
+          }}
+          loading={loading}
+        />
 
-          <FunctionCard
-            isDIDFunction
-            readOnly
-            cardHeader={"查詢身分EOA address"}
-            cardContent={
+        <FunctionCard
+          isDIDFunction
+          readOnly
+          cardHeader={"查詢身分EOA address"}
+          cardContent={
+            <TextField
+              onChange={(e) => {
+                setIdentityOwner(e.target.value);
+              }}
+              label="identity(address)"
+            />
+          }
+          onClick={async () => {
+            setLoading(true);
+            identityOwnerQuery(ethersProvider, identityOwner);
+            setLoading(false);
+          }}
+          loading={loading}
+        />
+        <FunctionCard
+          isDIDFunction
+          cardHeader={"變更所有權"}
+          cardContent={
+            <>
               <TextField
                 onChange={(e) => {
-                  setIdentityOwner(e.target.value);
+                  setChangeOwnerIdentity(e.target.value);
                 }}
                 label="identity(address)"
               />
-            }
-            onClick={async () => {
-              setLoading(true);
-              identityOwnerQuery(ethersProvider, identityOwner);
-              setLoading(false);
-            }}
-            loading={loading}
-          />
-          <FunctionCard
-            isDIDFunction
-            cardHeader={"變更所有權"}
-            cardContent={
-              <>
+              <TextField
+                onChange={(e) => {
+                  setChangeOwnerNewOwner(e.target.value);
+                }}
+                label="newOwner(address)"
+              />
+            </>
+          }
+          onClick={async () => {
+            setLoading(true);
+            await changeOwner(
+              ethersSigner,
+              changeOwnerIdentity,
+              changeOwnerNewOwner
+            );
+            setLoading(false);
+          }}
+          loading={loading}
+        />
+        <FunctionCard
+          cardHeader={"keccak256雜湊函數"}
+          onClick={async () => {
+            setLoading(true);
+            await keccak256("testjas;ldfjkl;aker");
+            setLoading(false);
+          }}
+          loading={loading}
+        />
+        <FunctionCard
+          isDIDFunction
+          cardHeader={"委任控制權"}
+          cardContent={
+            <>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={2}
+                flexWrap="wrap"
+                justifyContent="start"
+              >
                 <TextField
                   onChange={(e) => {
-                    setChangeOwnerIdentity(e.target.value);
+                    setAddDelegateIdentity(e.target.value);
                   }}
                   label="identity(address)"
+                  defaultValue="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
                 />
                 <TextField
                   onChange={(e) => {
-                    setChangeOwnerNewOwner(e.target.value);
+                    setAddDelegateDelegateType(e.target.value);
                   }}
-                  label="newOwner(address)"
+                  label="delegateType(bytes32)"
+                  defaultValue="0x314aba0071cdf863dd1f6a6a233529173e0e26e5e294f1c4bb24575c8d38e8aa"
                 />
-              </>
-            }
-            onClick={async () => {
-              setLoading(true);
-              await changeOwner(
-                ethersSigner,
-                changeOwnerIdentity,
-                changeOwnerNewOwner
-              );
-              setLoading(false);
-            }}
-            loading={loading}
-          />
-          <FunctionCard
-            cardHeader={"keccak256雜湊函數"}
-            onClick={async () => {
-              setLoading(true);
-              await keccak256("testjas;ldfjkl;aker");
-              setLoading(false);
-            }}
-            loading={loading}
-          />
-          <FunctionCard
-            isDIDFunction
-            cardHeader={"委任控制權"}
-            cardContent={
-              <>
-                <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  spacing={{ xs: 0, sm: 2 }}
-                  flexWrap="wrap"
-                  justifyContent="start"
-                >
-                  <TextField
-                    onChange={(e) => {
-                      setAddDelegateIdentity(e.target.value);
-                    }}
-                    label="identity(address)"
-                    defaultValue="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-                  />
-                  <TextField
-                    onChange={(e) => {
-                      setAddDelegateDelegateType(e.target.value);
-                    }}
-                    label="delegateType(bytes32)"
-                    defaultValue="0x314aba0071cdf863dd1f6a6a233529173e0e26e5e294f1c4bb24575c8d38e8aa"
-                  />
-                </Stack>
-                <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  spacing={{ xs: 0, sm: 2 }}
-                  flexWrap="wrap"
-                  justifyContent="start"
-                >
-                  <TextField
-                    onChange={(e) => {
-                      setAddDelegateDelegate(e.target.value);
-                    }}
-                    label="delegate(address)"
-                    defaultValue="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-                  />
-                  <TextField
-                    onChange={(e) => {
-                      setAddDelegateValidity(e.target.value);
-                    }}
-                    label="validity(uint)"
-                  />
-                </Stack>
-              </>
-            }
-            onClick={async () => {
-              setLoading(true);
-              await addDelegate(
-                ethersSigner,
-                addDelegateIdentity,
-                addDelegateDelegateType,
-                addDelegateDelegate,
-                addDelegateValidity
-              );
-              setLoading(false);
-            }}
-            loading={loading}
-          />
-        </Stack>
-        <Dialog open={open} onClose={() => setOpen(false)} maxWidth="lg">
-          <DialogTitle>{dialogTitle}</DialogTitle>
-          {dialogContent}
-          <DialogActions>
-            <Button onClick={() => setOpen(false)}>關閉</Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+              </Stack>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={{ xs: 0, sm: 2 }}
+                flexWrap="wrap"
+                justifyContent="start"
+              >
+                <TextField
+                  onChange={(e) => {
+                    setAddDelegateDelegate(e.target.value);
+                  }}
+                  label="delegate(address)"
+                  defaultValue="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+                />
+                <TextField
+                  onChange={(e) => {
+                    setAddDelegateValidity(e.target.value);
+                  }}
+                  label="validity(uint)"
+                />
+              </Stack>
+            </>
+          }
+          onClick={async () => {
+            setLoading(true);
+            await addDelegate(
+              ethersSigner,
+              addDelegateIdentity,
+              addDelegateDelegateType,
+              addDelegateDelegate,
+              addDelegateValidity
+            );
+            setLoading(false);
+          }}
+          loading={loading}
+        />
+      </Stack>
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="lg">
+        <DialogTitle>{dialogTitle}</DialogTitle>
+        {dialogContent}
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>關閉</Button>
+        </DialogActions>
+      </Dialog>
     </ThemeProvider>
   );
 };

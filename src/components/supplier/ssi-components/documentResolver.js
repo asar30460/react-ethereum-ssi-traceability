@@ -1,6 +1,6 @@
 import { Contract } from "ethers";
 
-async function queryDIDOwnerChangedEvents(ethersSigner) {
+export async function queryDIDOwnerChangedEvents(ethersSigner) {
   const abi = [
     "event DIDOwnerChanged(address indexed identity, address owner, uint previousChange)",
   ];
@@ -9,18 +9,20 @@ async function queryDIDOwnerChangedEvents(ethersSigner) {
 
   // Query the last 100 blocks for any changes
   const filter = contract.filters.DIDOwnerChanged;
-  const events = await contract.queryFilter(filter, -100);
+  const events = await contract.queryFilter(filter, -4);
 
-  console.log(`Length of owner changed events: ${events.length}`);
+  // console.log(`Length of owner changed events: ${events.length}`);
 
   for (let i = 0; i < events.length; i++) {
     // console.log(`events[${i}] detail:`);
     // console.log(events[i]);
     if (events[i].args[0] === ethersSigner["address"]) {
-      console.log(`Identity owner is changed. Address:${events[i].args[1]}`);
+      // console.log(`Identity owner is changed. Address:${events[i].args[1]}`);
       return events[i].args[1];
     }
   }
+
+  return false;
 }
 
 async function queryDIDDelegateChangedEvents(ethersSigner) {
@@ -33,7 +35,7 @@ async function queryDIDDelegateChangedEvents(ethersSigner) {
   const filter = contract.filters.DIDDelegateChanged;
   const events = await contract.queryFilter(filter, -1);
 
-  console.log(`Length of delegate changed events: ${events.length}`);
+  // console.log(`Length of delegate changed events: ${events.length}`);
 
   for (let i = 0; i < events.length; i++) {
     // console.log(`events[${i}] detail:`);

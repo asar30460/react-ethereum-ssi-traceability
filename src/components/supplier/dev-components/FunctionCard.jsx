@@ -29,7 +29,7 @@ const FunctionCard = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "207px",
+        height: { xs: "auto", sm: "207px" },
         backgroundColor: "#223540",
         color: "#E0E0E0",
         borderRadius: 2,
