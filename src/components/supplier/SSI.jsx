@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Contract } from "ethers";
 import {
-  DialogCreateSSI,
   queryDIDOwnerChangedEvents,
+  queryDIDDelegateChangedEvents,
   documentResolver,
 } from "./ssi-components";
 
@@ -11,18 +10,15 @@ import {
   Avatar,
   Box,
   Button,
-  Container,
   FormControl,
   InputLabel,
   Grid,
   MenuItem,
+  Paper,
   Select,
   Stack,
   Typography,
 } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import EditIcon from "@mui/icons-material/Edit";
-import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 
 // Mui Table Component
 import Table from "@mui/material/Table";
@@ -31,46 +27,47 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+
 const SSI = ({ ethersSigner }) => {
   const [openDialogCreateSSI, setOpenDialogCreateSSI] = useState(false);
-  const [identity, setIdentity] = useState(false);
+  const [mode, setMode] = useState("default");
+  const [optionlist, setoptionlist] = useState([
+    { did: `did:ethr:${ethersSigner["address"]}` },
+  ]);
+  const [docDID, setDocDID] = useState("");
 
   useEffect(() => {
-    async function identityOwner() {
-      const abi = [
-        "function identityOwner(address identity) view returns(address)",
-      ];
-      const contractAddress = process.env.REACT_APP_DID_REGISTRY;
-      const contract = new Contract(contractAddress, abi, ethersSigner);
-      const result = await contract.identityOwner(ethersSigner["address"]);
-      setIdentity(result);
-    }
     async function getDocument() {
       const response = await documentResolver(ethersSigner);
       console.log(response);
     }
-    identityOwner();
     getDocument();
   }, []);
 
-  const [mode, setMode] = useState("default");
-  const [optionlist, setoptionlist] = useState([
-    { did: ethersSigner["address"] },
-  ]);
   useEffect(() => {
+    let list = [];
     switch (mode) {
       case "default":
-        let list = [];
+        list = [{ did: `did:ethr:${ethersSigner["address"]}` }];
+        setoptionlist(list);
+        setDocDID(list[0].did);
+        break;
+      case "others":
         async function isOwnerChange() {
-          const result = {
-            did: `你已將身分轉移給:${await queryDIDOwnerChangedEvents(
-              ethersSigner
-            )}`,
-          };
-          list.push(result);
-          setoptionlist(list);
+          const result = await queryDIDOwnerChangedEvents(ethersSigner);
+          setoptionlist(result);
+          setDocDID(result[0].did);
         }
         isOwnerChange();
+        break;
+      case "delegate":
+        async function queryDIDDelegate() {
+          const result = await queryDIDDelegateChangedEvents(ethersSigner);
+          setoptionlist(result);
+          setDocDID(result[0].did);
+        }
+        queryDIDDelegate();
         break;
       default:
         break;
@@ -83,8 +80,27 @@ const SSI = ({ ethersSigner }) => {
     { text: "受委任SSI", mode: "delegate" },
   ];
 
+  const [docId, setDocId] = useState("");
+  const [docVerificationMethod, setDocVerificationMethod] = useState("");
+  const [docAuthentication, setDocAuthentication] = useState("");
+  const DIDDocument = {
+    id: "did:ethr:0xb9c5714089478a327f09197987f16f9e5d936e8a",
+    verificationMethod: [
+      {
+        id: "did:ethr:0xb9c5714089478a327f09197987f16f9e5d936e8a#controller",
+        type: "EcdsaSecp256k1RecoveryMethod2020",
+        controller: "did:ethr:0xb9c5714089478a327f09197987f16f9e5d936e8a",
+        blockchainAccountId:
+          "eip155:1:0xb9c5714089478a327f09197987f16f9e5d936e8a",
+      },
+    ],
+    authentication: [
+      "did:ethr:0xb9c5714089478a327f09197987f16f9e5d936e8a#controller",
+    ],
+  };
+
   return (
-    <Stack gap={1}>
+    <Stack gap={1} alignItems="flex-start">
       <Stack direction="row" alignItems="center">
         <Avatar
           sx={{
@@ -96,16 +112,16 @@ const SSI = ({ ethersSigner }) => {
         >
           1
         </Avatar>
-        <Typography variant="subtitle1">&nbsp;選擇SSI Document來源</Typography>
+        &nbsp;&nbsp;&nbsp;SSI Document來源
       </Stack>
-
-      <Grid container sx={{ ml: 5 }}>
+      <Grid container sx={{ ml: 6 }}>
         {SSIDocSource.map((source) => (
           <Button
+            key={source.mode}
             size="large"
             onClick={() => setMode(source.mode)}
             sx={{
-              backgroundColor: source.mode === mode ? "#223540" : "#1B2A32",
+              backgroundColor: "#1B2A32",
               color: source.mode === mode ? "#E0E0E0" : "grey",
               borderRadius: "0px",
               border: source.mode === mode ? "1px solid #1976d2" : "",
@@ -130,144 +146,174 @@ const SSI = ({ ethersSigner }) => {
         >
           2
         </Avatar>
-        <Typography variant="subtitle1">&nbsp;選擇SSI</Typography>
+        &nbsp;&nbsp;&nbsp;選擇SSI
       </Stack>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-helper-label">選擇</InputLabel>
+      <FormControl
+        sx={{
+          ml: 6,
+          backgroundColor: "#1B2A32",
+        }}
+      >
+        <InputLabel
+          sx={{
+            color: "#E0E0E0",
+          }}
+        >
+          DID
+        </InputLabel>
         <Select
-          labelId="demo-simple-select-helper-label"
-          id="demo-simple-select-helper"
-          value=""
-          label="Age"
-          onChange={""}
+          label="DID"
+          value={docDID}
+          onChange={(e) => {
+            setDocDID(e.target.value);
+          }}
+          sx={{
+            color: "#E0E0E0",
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderRadius: "0px",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#1976d2",
+              borderRadius: "0px",
+              borderWidth: "0.15rem",
+            },
+          }}
         >
           {optionlist.map((opt) => (
-            <MenuItem value={opt.did}>{opt.did}</MenuItem>
+            <MenuItem key={opt.did} value={opt.did}>
+              {opt.did}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
-      {/* <Autocomplete
-        disablePortal
-        popupIcon={<ArrowDropDownIcon color="info" />}
-        id="combo-box-demo"
-        options={optionlist}
-        sx={{
-          ml: 5,
-          ".MuiAutocomplete-inputRoot": {
-            backgroundColor: "#1B2A32",
-            "&:hover": { border: "1px solid #1976d2" },
-          },
-        }}
-        renderInput={(params) => (
-          <TextField
-            disabled
-            {...params}
-            label="點擊開啟下拉式選單"
-            sx={{
-              label: {
-                color: "#E0E0E0",
-              },
-            }}
-          />
-        )}
-      /> */}
+      <Typography fontSize="20px" fontWeight="bold">
+        DID Document
+      </Typography>
+      {(optionlist[0].did === "無委任資料") |
+      (optionlist[0].did === "無其它DID資料") ? (
+        <Box display="flex" sx={{ backgroundColor: "#1b2a32" }}>
+          <Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              alignContent={"center"}
+              sx={{ p: 2 }}
+            >
+              <ReportProblemIcon
+                color="warning"
+                fontSize="large"
+                sx={{ mr: 2 }}
+              />
+              <Box>
+                <Typography fontWeight={"bold"} variant="subtitle1">
+                  未授權的DID
+                </Typography>
+                <Typography variant="subtitle2">
+                  Decentralized Identity NOT Authorized
+                </Typography>
+              </Box>
+            </Stack>
+          </Stack>
+        </Box>
+      ) : (
+        <TableContainer component={Paper} sx={{ backgroundColor: "#1b2a32" }}>
+          <Table aria-label="simple table">
+            <TableBody>
+              <TableRow
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  backgroundColor: "#1b2a32",
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  <Typography
+                    fontWeight={"bold"}
+                    variant="subtitle2"
+                    sx={{ mb: 1 }}
+                  >
+                    @context
+                  </Typography>
+                  <div>{"https://www.w3.org/ns/did/v1"}</div>
+                  {"https://w3id.org/security/suites/secp256k1recovery-2020/v2"}
+                </TableCell>
+                <TableCell align="right">123</TableCell>
+              </TableRow>
+              <TableRow
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  backgroundColor: "#1b2a32",
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  <Typography
+                    fontWeight={"bold"}
+                    variant="subtitle2"
+                    sx={{ mb: 1 }}
+                  >
+                    id
+                  </Typography>
+                  {docDID}
+                </TableCell>
+              </TableRow>
+              <TableRow
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  backgroundColor: "#1b2a32",
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  <Typography
+                    fontWeight={"bold"}
+                    variant="subtitle2"
+                    sx={{ mb: 1 }}
+                  >
+                    verificationMethod
+                  </Typography>
+                  <div>
+                    {DIDDocument.verificationMethod.map(
+                      (idx) => `id: ${idx.id}`
+                    )}
+                  </div>
+                  <div>
+                    {DIDDocument.verificationMethod.map(
+                      (idx) => `type: ${idx.type}`
+                    )}
+                  </div>
+                  <div>
+                    {DIDDocument.verificationMethod.map(
+                      (idx) => `controller: ${idx.controller}`
+                    )}
+                  </div>
+                  <div>
+                    {DIDDocument.verificationMethod.map(
+                      (idx) => `blockchainAccountId: ${idx.blockchainAccountId}`
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+              <TableRow
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  backgroundColor: "#1b2a32",
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  <Typography
+                    fontWeight={"bold"}
+                    variant="subtitle2"
+                    sx={{ mb: 1 }}
+                  >
+                    authentication
+                  </Typography>
+                  {JSON.stringify(DIDDocument.authentication, null, 2)}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Stack>
   );
-  // identity === ethersSigner["address"] ? (
-  //   <TableContainer component={Paper} sx={{ backgroundColor: "#1b2a32" }}>
-  //     <Table aria-label="simple table">
-  //       <TableBody>
-  //         {rows.map((row) => (
-  //           <TableRow
-  //             key={row.name}
-  //             sx={{
-  //               "&:last-child td, &:last-child th": { border: 0 },
-  //               backgroundColor: "#1b2a32",
-  //             }}
-  //           >
-  //             <TableCell component="th" scope="row">
-  //               <Typography fontWeight={"bold"} variant="subtitle1">
-  //                 {row.name}
-  //               </Typography>
-  //               {row.value}
-  //             </TableCell>
-  //             <TableCell align="right">
-  //               {/* {row.func} */}
-  //               {row.name === "身分" ? (
-  //                 <>
-  //                   <Button
-  //                     variant="outlined"
-  //                     onClick={() => {
-  //                       setOpenDialogCreateSSI(true);
-  //                     }}
-  //                     size="large"
-  //                     sx={{
-  //                       pl: 2,
-  //                       backgroundColor: "#456B80",
-  //                       borderColor: "#456B80",
-  //                       color: "#FFF",
-  //                       "&:hover": {
-  //                         backgroundColor: "#1b2a32",
-  //                         borderColor: "#456B80",
-  //                         color: "#eeeeee",
-  //                       },
-  //                     }}
-  //                   >
-  //                     <EditIcon />
-  //                     <Typography
-  //                       fontWeight={"bold"}
-  //                       variant="subtitle1"
-  //                       sx={{
-  //                         ml: 1,
-  //                       }}
-  //                     >
-  //                       變更身分擁有者
-  //                     </Typography>
-  //                   </Button>
-  //                   <DialogCreateSSI
-  //                     openDialogCreateSSI={openDialogCreateSSI}
-  //                     setOpenDialogCreateSSI={setOpenDialogCreateSSI}
-  //                     ethersSigner={ethersSigner}
-  //                   />
-  //                 </>
-  //               ) : (
-  //                 <></>
-  //               )}
-  //             </TableCell>
-  //           </TableRow>
-  //         ))}
-  //       </TableBody>
-  //     </Table>
-  //   </TableContainer>
-  // ) : (
-  //   <Stack>
-  //     <Stack
-  //       direction="row"
-  //       alignItems="center"
-  //       alignContent={"center"}
-  //       sx={{ p: 2 }}
-  //     >
-  //       <ReportProblemIcon color="warning" fontSize="large" />
-  //       <Container>
-  //         <Typography fontWeight={"bold"} variant="subtitle1">
-  //           未擁有去中心化身分
-  //         </Typography>
-  //         <Typography variant="subtitle2">
-  //           Decentralized Identity NOT Found
-  //         </Typography>
-  //       </Container>
-  //     </Stack>
-  //     <Divider
-  //       variant="middles"
-  //       sx={{ backgroundColor: "#E0E0E0", mt: -1, mb: 1 }}
-  //     />
-  //     <Container>
-  //       <Typography variant="text">
-  //         你已將自身預設的身分擁有者轉移給下方的EOA
-  //       </Typography>
-  //     </Container>
-  //   </Stack>
-  // );
 };
 
 export default SSI;

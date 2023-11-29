@@ -44,6 +44,9 @@ const theme = createTheme({
     MuiButton: styleOverrides.font,
     MuiTableCell: styleOverrides.tableCell,
     MuiTextField: styleOverrides.textField,
+    MuiInputLabel: styleOverrides.font,
+    MuiMenuItem: styleOverrides.font,
+    MuiSelect: styleOverrides.font,
   },
 });
 

@@ -13,19 +13,20 @@ export async function queryDIDOwnerChangedEvents(ethersSigner) {
 
   // console.log(`Length of owner changed events: ${events.length}`);
 
+  let list = [];
   for (let i = 0; i < events.length; i++) {
     // console.log(`events[${i}] detail:`);
     // console.log(events[i]);
-    if (events[i].args[0] === ethersSigner["address"]) {
+    if (events[i].args[1] === ethersSigner["address"]) {
       // console.log(`Identity owner is changed. Address:${events[i].args[1]}`);
-      return events[i].args[1];
+      list.push({ did: `did:ethr:${events[i].args[0]}` });
     }
   }
-
-  return false;
+  if (list.length === 0) return [{ did: `無其它DID資料` }];
+  return list;
 }
 
-async function queryDIDDelegateChangedEvents(ethersSigner) {
+export async function queryDIDDelegateChangedEvents(ethersSigner) {
   const abi = [
     "event DIDDelegateChanged(address indexed identity, bytes32 delegateType, address delegate, uint validTo, uint previousChange)",
   ];
@@ -33,16 +34,19 @@ async function queryDIDDelegateChangedEvents(ethersSigner) {
   const contract = new Contract(contractAddress, abi, ethersSigner);
 
   const filter = contract.filters.DIDDelegateChanged;
-  const events = await contract.queryFilter(filter, -1);
+  const events = await contract.queryFilter(filter, -4);
 
   // console.log(`Length of delegate changed events: ${events.length}`);
-
+  let list = [];
   for (let i = 0; i < events.length; i++) {
     // console.log(`events[${i}] detail:`);
-    console.log(events[i]);
+    // console.log(events[i]);
     if (events[i].args[0] === ethersSigner["address"])
-      console.log(`Delegator found. Address:${events[i].args[2]}`);
+      list.push({ did: `did:ethr:${events[i].args[2]}` });
   }
+
+  if (list.length === 0) return [{ did: `無委任資料` }];
+  return list;
 }
 
 export const documentResolver = async (ethersSigner) => {
