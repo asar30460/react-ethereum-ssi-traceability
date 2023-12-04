@@ -9,9 +9,9 @@ export async function queryDIDOwnerChangedEvents(ethersSigner) {
 
   // Query the last 100 blocks for any changes
   const filter = contract.filters.DIDOwnerChanged;
-  const events = await contract.queryFilter(filter, -4);
+  const events = await contract.queryFilter(filter);
 
-  // console.log(`Length of owner changed events: ${events.length}`);
+  console.log(`Length of owner changed events: ${events.length}`);
 
   let list = [];
   for (let i = 0; i < events.length; i++) {
@@ -34,9 +34,9 @@ export async function queryDIDDelegateChangedEvents(ethersSigner) {
   const contract = new Contract(contractAddress, abi, ethersSigner);
 
   const filter = contract.filters.DIDDelegateChanged;
-  const events = await contract.queryFilter(filter, -4);
+  const events = await contract.queryFilter(filter);
 
-  // console.log(`Length of delegate changed events: ${events.length}`);
+  console.log(`Length of delegate changed events: ${events.length}`);
   let list = [];
   for (let i = 0; i < events.length; i++) {
     // console.log(`events[${i}] detail:`);

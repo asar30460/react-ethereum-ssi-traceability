@@ -6,7 +6,7 @@ import SearchIcon from "../../assets/searchIcon.svg";
 
 import { EntrancePaper } from "..";
 
-const Entrance = () => {
+const Entrance = ({ setProperLogin }) => {
   return (
     <div className="App">
       <header className="App-header">
@@ -32,6 +32,7 @@ const Entrance = () => {
             spacing={{ xs: 1, sm: 2, md: 4 }}
           >
             <EntrancePaper
+              setProperLogin={setProperLogin}
               PaperType={"supplier"}
               PageName={"供應商管理"}
               Instruction={"登入"}

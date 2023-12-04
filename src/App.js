@@ -1,19 +1,27 @@
+import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useSDK } from "@metamask/sdk-react";
-
-import { Entrance, SupplierPage } from "./components";
+import { Entrance, SupplierPage, InvalidAlert } from "./components";
 
 const App = () => {
-  const { connected } = useSDK();
-
+  const [properLogin, setProperLogin] = useState(false);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Entrance />} />
+        <Route
+          path="/"
+          element={<Entrance setProperLogin={setProperLogin} />}
+        />
         <Route
           path="supplier/*"
-          element={connected ? <SupplierPage /> : <Navigate replace to=".." />}
+          element={
+            properLogin ? (
+              <SupplierPage />
+            ) : (
+              <Navigate replace to="../invalid-login" />
+            )
+          }
         />
+        <Route path="/invalid-login" element={<InvalidAlert />} />
       </Routes>
     </BrowserRouter>
   );

@@ -4,7 +4,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { MetaMaskProvider } from "@metamask/sdk-react";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -52,24 +51,9 @@ const theme = createTheme({
 
 root.render(
   <React.StrictMode>
-    <MetaMaskProvider
-      debug={false}
-      sdkOptions={{
-        logging: {
-          developerMode: false,
-        },
-        communicationServerUrl: process.env.REACT_APP_COMM_SERVER_URL,
-        checkInstallationImmediately: false, // This will automatically connect to MetaMask on page load
-        dappMetadata: {
-          name: "React Ethereum Traceability App",
-          url: window.location.host,
-        },
-      }}
-    >
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </MetaMaskProvider>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );
 

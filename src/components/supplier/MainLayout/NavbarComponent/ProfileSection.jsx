@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useSDK } from "@metamask/sdk-react";
-
 // material-ui
 import { useTheme } from "@mui/material/styles";
 import {
@@ -31,7 +29,7 @@ import { Transitions } from "../../..";
 
 // ==============================|| PROFILE MENU ||============================== //
 
-const ProfileSection = () => {
+const ProfileSection = (props) => {
   // Page handlers
   const theme = useTheme();
 
@@ -72,23 +70,10 @@ const ProfileSection = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
-  // MetaMask SDK handlers
-  const { sdk } = useSDK();
-  const accounts = sdk?.connect();
-  const [account, setAccount] = useState(accounts?.[0]);
-  const getAccount = async () => {
-    const accounts = await sdk?.connect();
-    setAccount(accounts?.[0]);
-  };
-  useEffect(() => {
-    getAccount();
-  });
-
   // Router handlers
   const navigate = useNavigate();
 
   const terminate = () => {
-    sdk?.terminate();
     alert("你已登出");
     navigate("/");
   };
@@ -163,7 +148,8 @@ const ProfileSection = () => {
                           fontSize="1rem"
                           fontWeight="bold"
                         >
-                          {account.substr(0, 5)}...{account.substr(-4, 4)}
+                          {props.ethersSigner.substr(0, 5)}...
+                          {props.ethersSigner.substr(-4, 4)}
                         </Typography>
                       </Stack>
                       <Typography variant="subtitle2" align="left">

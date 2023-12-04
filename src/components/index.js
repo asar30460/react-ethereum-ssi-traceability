@@ -1,8 +1,9 @@
-// Entrance
+// entrance
 export { default as EntrancePaper } from "./entrance/EntrancePaper";
 export { default as Entrance } from "./entrance/Entrance";
+export { default as InvalidAlert } from "./entrance/InvalidAlert";
 
-// Supplier
+// supplier
 export { default as SupplierPage } from "./supplier";
 
 // ui-component

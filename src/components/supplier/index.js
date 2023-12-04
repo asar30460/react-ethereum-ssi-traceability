@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import { useSDK } from "@metamask/sdk-react";
 import { ethers } from "ethers";
 
 import { Box } from "@mui/material";
@@ -17,7 +16,6 @@ const SupplierPage = () => {
   const [selectedPage, setSelectedPage] = useState("");
   const [collapsed, setcollapsed] = useState(false);
 
-  const { chainId } = useSDK();
   const [ethersProvider, setEthersProvider] = useState("尚未連線");
   const [ethersSigner, setEthersSigner] = useState("尚未連線");
   const [ethersInfo, setethersInfo] = useState([]);
@@ -46,7 +44,7 @@ const SupplierPage = () => {
         "連線帳戶",
         `${signer["address"].slice(1, 6)}...${signer["address"].slice(-5, -1)}`
       ),
-      createData("Chain ID", parseInt(chainId, 16)),
+      createData("Chain ID", "31337 (Hardhat EVM)"),
     ]);
   };
 
@@ -57,6 +55,7 @@ const SupplierPage = () => {
   return (
     <>
       <Navbar
+        ethersSigner={ethersSigner["address"]}
         setcollapsed={setcollapsed}
         collapsed={collapsed}
         setSelectedPage={setSelectedPage}

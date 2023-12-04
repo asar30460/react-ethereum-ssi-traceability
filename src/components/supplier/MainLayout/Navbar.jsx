@@ -14,7 +14,7 @@ import {
 
 import { LogoSection, ProfileSection } from "./NavbarComponent";
 
-const Navbar = ({ setcollapsed, collapsed, setSelectedPage }) => {
+const Navbar = ({ ethersSigner, setcollapsed, collapsed, setSelectedPage }) => {
   const theme = useTheme();
 
   return (
@@ -58,7 +58,7 @@ const Navbar = ({ setcollapsed, collapsed, setSelectedPage }) => {
             </Grid>
 
             <Grid item={true} xs={6} container justifyContent="flex-end">
-              <ProfileSection />
+              <ProfileSection ethersSigner={ethersSigner} />
             </Grid>
           </Grid>
         </Toolbar>
