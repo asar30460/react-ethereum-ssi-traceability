@@ -18,41 +18,29 @@ const SupplierPage = () => {
 
   const [ethersProvider, setEthersProvider] = useState("尚未連線");
   const [ethersSigner, setEthersSigner] = useState("尚未連線");
-  const [ethersInfo, setethersInfo] = useState([]);
 
-  function createData(title, value) {
-    return { title, value };
-  }
-
-  const getAccount = async () => {
-    let provider;
-    let signer;
-
-    if (window.ethereum == null) {
-      console.log("MetaMask not installed; using read-only defaults");
-      provider = ethers.getDefaultProvider();
-    } else {
-      provider = new ethers.BrowserProvider(window.ethereum);
-      signer = await provider.getSigner();
-    }
-    setEthersProvider(provider);
-    setEthersSigner(signer);
-
-    setethersInfo([
-      createData("RPC 伺服器", "Localhost:8545"),
-      createData(
-        "連線帳戶",
-        `${signer["address"].slice(1, 6)}...${signer["address"].slice(-5, -1)}`
-      ),
-      createData("Chain ID", "31337 (Hardhat EVM)"),
-    ]);
-  };
+  const [isInitCompeleted, setIsInitCompeleted] = useState(false);
 
   useEffect(() => {
-    getAccount();
-  }, []);
+    const init = async () => {
+      let provider;
+      let signer;
 
-  return (
+      try {
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+      } catch (error) {
+        provider = ethers.getDefaultProvider();
+        console.log("MetaMask not installed; using read-only defaults");
+      }
+      setEthersProvider(provider);
+      setEthersSigner(signer);
+      setIsInitCompeleted(true);
+    };
+    init();
+  }, [selectedPage]);
+
+  return isInitCompeleted ? (
     <>
       <Navbar
         ethersSigner={ethersSigner["address"]}
@@ -79,7 +67,7 @@ const SupplierPage = () => {
               zIndex: 3,
               flexGrow: 0.98,
               overflow: "auto",
-              p: 2,
+              p: 3,
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
               backgroundColor: selectedPage === "dev" ? "#1B2A32" : "#223540",
@@ -87,7 +75,15 @@ const SupplierPage = () => {
             }}
           >
             <Routes>
-              <Route path="" element={<Feed ethersInfo={ethersInfo} />} />
+              <Route
+                path=""
+                element={
+                  <Feed
+                    ethersProvider={ethersProvider}
+                    ethersSigner={ethersSigner}
+                  />
+                }
+              />
               <Route
                 path="/ssi-management"
                 element={<SSI ethersSigner={ethersSigner} />}
@@ -107,6 +103,8 @@ const SupplierPage = () => {
         </Box>
       </div>
     </>
+  ) : (
+    <div>Loading...</div>
   );
 };
 

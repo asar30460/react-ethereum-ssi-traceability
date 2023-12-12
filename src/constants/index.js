@@ -6,15 +6,15 @@ import LogoDevIcon from "@mui/icons-material/LogoDev";
 import EthereumDIDRegistry from "./EthereumDIDRegistry.json";
 
 export const navlinks = {
-  general: [
+  ethereum: [
     {
-      name: "動態",
+      name: "網路動態",
       imgIcon: <FormatAlignLeftIcon />,
       link: "",
     },
   ],
 
-  advanced: [
+  traceability: [
     {
       name: "SSI 設置",
       imgIcon: <SwitchAccountIcon />,

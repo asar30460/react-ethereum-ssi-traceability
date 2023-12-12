@@ -15,12 +15,19 @@ const styleOverrides = {
       },
     },
   },
+  tableRow: {
+    styleOverrides: {
+      root: {
+        borderBottom: "3px solid #223540",
+      },
+    },
+  },
   tableCell: {
     styleOverrides: {
       root: {
         color: "#E0E0E0",
         fontFamily: "Noto Serif TC",
-        borderBottom: "1px solid #E0E0E0",
+        borderBottom: "3px solid #223540",
       },
     },
   },
@@ -41,11 +48,13 @@ const theme = createTheme({
   components: {
     MuiTypography: styleOverrides.font,
     MuiButton: styleOverrides.font,
+    MuiTableRow: styleOverrides.tableRow,
     MuiTableCell: styleOverrides.tableCell,
     MuiTextField: styleOverrides.textField,
     MuiInputLabel: styleOverrides.font,
     MuiMenuItem: styleOverrides.font,
     MuiSelect: styleOverrides.font,
+    MuiChip: styleOverrides.font,
   },
 });
 

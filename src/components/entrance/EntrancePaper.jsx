@@ -37,6 +37,8 @@ const EntrancePaper = ({
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState(false);
+
+  const [MetaMaskChecker, setMetaMaskChecker] = useState(false);
   const [currentMetaMaskAccount, setCurrentMetaMaskAccount] = useState(false);
 
   const queryHandler = async () => {
@@ -45,9 +47,16 @@ const EntrancePaper = ({
 
   useEffect(() => {
     async function getBrowserInfo() {
-      let provider = new ethers.BrowserProvider(window.ethereum);
-      let signer = await provider.getSigner();
-      setCurrentMetaMaskAccount(signer["address"]);
+      try {
+        let provider = new ethers.BrowserProvider(window.ethereum);
+        let signer = await provider.getSigner();
+        setMetaMaskChecker(true);
+        setCurrentMetaMaskAccount(signer["address"]);
+      } catch (error) {
+        setCurrentMetaMaskAccount(
+          "未偵測到你的瀏覽器有安裝MetaMask擴充套件，或是你尚未在MetaMask登入任何帳戶。"
+        );
+      }
     }
     getBrowserInfo();
   }, [open]);
@@ -145,29 +154,48 @@ const EntrancePaper = ({
               {ButtonDesc}
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)}>
-              <DialogTitle sx={{ mb: -1 }}>
-                {"確認透過以下帳戶登入管理頁面"}
-              </DialogTitle>
-              <DialogContent>
-                <Typography fontWeight="bold" sx={{ mb: 3 }}>
-                  {currentMetaMaskAccount}
-                </Typography>
-                <Typography variant="body2" color="red">
-                  請注意，進到管理頁面後，即便從MetaMask擴充套件更換帳戶，管理頁面的帳戶也不會變更，若使用者此時繼續執行相關功能將因身分不一致出現錯誤。
-                  因此，若要更換所登入的帳戶，務必登出後重新選擇。
-                </Typography>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => setOpen(false)}>關閉</Button>
-                <Button
-                  onClick={() => {
-                    setProperLogin(true);
-                    navigate("/supplier");
-                  }}
-                >
-                  了解並繼續
-                </Button>
-              </DialogActions>
+              {MetaMaskChecker ? (
+                <>
+                  <DialogTitle sx={{ mb: -1 }}>
+                    {"確認透過以下帳戶登入管理頁面"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <Typography fontWeight="bold" sx={{ mb: 3 }}>
+                      {currentMetaMaskAccount}
+                    </Typography>
+                    <Typography variant="body2" color="red">
+                      請注意，進到管理頁面後，即便從
+                      MetaMask擴充套件更換帳戶，管理頁面的帳戶並不會一同變更，若使用者此時繼續使用交易操作，則依然以原有帳戶為主。
+                      因此，為避免身分的誤用，若要更換所登入管理頁面的帳戶，務必登出後重新選擇。
+                    </Typography>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => setOpen(false)}>關閉</Button>
+                    <Button
+                      disabled={MetaMaskChecker ? false : true}
+                      onClick={() => {
+                        setProperLogin(true);
+                        navigate("/supplier");
+                      }}
+                    >
+                      了解並繼續
+                    </Button>
+                  </DialogActions>
+                </>
+              ) : (
+                <>
+                  <DialogContent>
+                    <Typography variant="subtitle1" color="red">
+                      {
+                        "未偵測到你的瀏覽器有安裝MetaMask擴充套件，或是你尚未在MetaMask登入任何帳戶。"
+                      }
+                    </Typography>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => setOpen(false)}>關閉</Button>
+                  </DialogActions>
+                </>
+              )}
             </Dialog>
           </AnimateButton>
         </Grid>

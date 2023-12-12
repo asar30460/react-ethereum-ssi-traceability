@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Box, Button, ButtonBase, Stack, TextField } from "@mui/material";
+import { Button, ButtonBase, Stack, TextField } from "@mui/material";
 import ArticleIcon from "@mui/icons-material/Article";
 import CodeIcon from "@mui/icons-material/Code";
 import SettingsIcon from "@mui/icons-material/Settings";

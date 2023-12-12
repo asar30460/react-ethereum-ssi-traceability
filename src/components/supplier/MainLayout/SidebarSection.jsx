@@ -9,8 +9,8 @@ const SidebarSection = ({
   setSelectedPage,
   sidebarCollapsed,
 }) => {
-  const general = navlinks["general"];
-  const advanced = navlinks["advanced"];
+  const ethereum = navlinks["ethereum"];
+  const traceability = navlinks["traceability"];
   const dev = navlinks["dev"];
   return (
     <Box
@@ -20,12 +20,12 @@ const SidebarSection = ({
       width={sidebarCollapsed ? "75px" : "160px"}
       sx={{
         p: 1,
-        mr: -2,
+        mr: -1,
         border: "5px solid #1B2A32",
       }}
     >
       <Typography fontWeight={"bold"} variant="subtitle2" sx={{ ml: 2, mt: 2 }}>
-        一般
+        以太坊
       </Typography>
       <Divider
         variant="middle"
@@ -34,22 +34,20 @@ const SidebarSection = ({
           backgroundColor: "#FFF",
         }}
       />
-      {general.map((general) => (
-        <Link key={general.link} to={`${general.link}`}>
+      {ethereum.map((idx) => (
+        <Link key={idx.link} to={`${idx.link}`}>
           <Button
             variant="outlined"
-            onClick={() => setSelectedPage(general.link)}
+            onClick={() => setSelectedPage(idx.link)}
             size="large"
             sx={{
-              px: 2,
               mb: 1,
               color: "#eeeeee",
-              borderColor:
-                general.link === selectedPage ? "grey[900]" : "#1B2A32",
-              opacity: general.link === selectedPage ? "1" : "0.6",
+              borderColor: idx.link === selectedPage ? "grey[900]" : "#1B2A32",
+              opacity: idx.link === selectedPage ? "1" : "0.6",
             }}
           >
-            <SvgIcon>{general.imgIcon}</SvgIcon>
+            <SvgIcon>{idx.imgIcon}</SvgIcon>
             {sidebarCollapsed ? (
               ""
             ) : (
@@ -62,14 +60,14 @@ const SidebarSection = ({
                   textAlign: "left",
                 }}
               >
-                {general.name}
+                {idx.name}
               </Typography>
             )}
           </Button>
         </Link>
       ))}
       <Typography fontWeight={"bold"} variant="subtitle2" sx={{ ml: 2, mt: 2 }}>
-        進階
+        供應鏈
       </Typography>
       <Divider
         variant="middle"
@@ -78,22 +76,20 @@ const SidebarSection = ({
           backgroundColor: "#FFF",
         }}
       />
-      {advanced.map((advanced) => (
-        <Link key={advanced.link} to={`${advanced.link}`}>
+      {traceability.map((idx) => (
+        <Link key={idx.link} to={`${idx.link}`}>
           <Button
             variant="outlined"
-            onClick={() => setSelectedPage(advanced.link)}
+            onClick={() => setSelectedPage(idx.link)}
             size="large"
             sx={{
-              px: 2,
               mb: 1,
               color: "#eeeeee",
-              borderColor:
-                advanced.link === selectedPage ? "grey[900]" : "#1B2A32",
-              opacity: advanced.link === selectedPage ? "1" : "0.6",
+              borderColor: idx.link === selectedPage ? "grey[900]" : "#1B2A32",
+              opacity: idx.link === selectedPage ? "1" : "0.6",
             }}
           >
-            <SvgIcon>{advanced.imgIcon}</SvgIcon>
+            <SvgIcon>{idx.imgIcon}</SvgIcon>
             {sidebarCollapsed ? (
               ""
             ) : (
@@ -102,7 +98,7 @@ const SidebarSection = ({
                 variant="subtitle1"
                 sx={{ ml: 2, width: "70px", textAlign: "left" }}
               >
-                {advanced.name}
+                {idx.name}
               </Typography>
             )}
           </Button>
@@ -116,7 +112,6 @@ const SidebarSection = ({
               onClick={() => setSelectedPage(dev.link)}
               size="large"
               sx={{
-                px: 2,
                 backgroundColor: "#FA433B",
                 borderColor: dev.link === selectedPage ? "#FA433B" : "#1B2A32",
                 color: "#eeeeee",

@@ -1,6 +1,9 @@
 export { default as DialogCreateSSI } from "./DialogCreateSSI";
+export { default as UnselectedSSI } from "./UnselectedSSI";
 export {
-  documentResolver,
-  queryDIDOwnerChangedEvents,
+  queryIdentityOwner,
+  queryDIDOwnerChangedTo,
+  queryDIDDelegateTo,
   queryDIDDelegateChangedEvents,
+  documentResolver,
 } from "./documentResolver";

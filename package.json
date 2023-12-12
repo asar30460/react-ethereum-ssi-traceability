@@ -8,6 +8,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.13",
     "@mui/material": "^5.14.13",
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "dotenv": "^16.3.1",
     "ethers": "^6.8.0",
     "framer-motion": "^10.16.12",
@@ -34,5 +35,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "hardhat-ethernal": "^3.2.5"
   }
 }
