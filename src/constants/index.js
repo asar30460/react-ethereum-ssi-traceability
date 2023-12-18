@@ -1,4 +1,4 @@
-import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
+import TimelineIcon from "@mui/icons-material/Timeline";
 import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
 import WindowIcon from "@mui/icons-material/Window";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
@@ -9,7 +9,7 @@ export const navlinks = {
   ethereum: [
     {
       name: "網路動態",
-      imgIcon: <FormatAlignLeftIcon />,
+      imgIcon: <TimelineIcon />,
       link: "",
     },
   ],

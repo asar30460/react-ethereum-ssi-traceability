@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { Box, Button, Divider, SvgIcon, Typography } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 
 import { navlinks } from "../../";
 
@@ -14,40 +14,32 @@ const SidebarSection = ({
   const dev = navlinks["dev"];
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      backgroundColor="#1B2A32"
-      width={sidebarCollapsed ? "75px" : "160px"}
+      width={sidebarCollapsed ? "65px" : "140px"}
+      gap={1}
       sx={{
         p: 1,
-        mr: -1,
-        border: "5px solid #1B2A32",
+        display: "flex",
+        flexDirection: "column",
+        borderColor: "#1B2A32",
+        alignItems: "flex-start",
       }}
     >
       <Typography fontWeight={"bold"} variant="subtitle2" sx={{ ml: 2, mt: 2 }}>
         以太坊
       </Typography>
-      <Divider
-        variant="middle"
-        sx={{
-          mb: 1,
-          backgroundColor: "#FFF",
-        }}
-      />
       {ethereum.map((idx) => (
         <Link key={idx.link} to={`${idx.link}`}>
           <Button
             variant="outlined"
             onClick={() => setSelectedPage(idx.link)}
-            size="large"
             sx={{
               mb: 1,
               color: "#eeeeee",
-              borderColor: idx.link === selectedPage ? "grey[900]" : "#1B2A32",
-              opacity: idx.link === selectedPage ? "1" : "0.6",
+              borderColor: "#1B2A32",
+              opacity: idx.link === selectedPage ? "1" : "0.4",
             }}
           >
-            <SvgIcon>{idx.imgIcon}</SvgIcon>
+            {idx.imgIcon}
             {sidebarCollapsed ? (
               ""
             ) : (
@@ -56,7 +48,7 @@ const SidebarSection = ({
                 variant="subtitle1"
                 sx={{
                   ml: 2,
-                  width: "70px",
+                  width: "65px",
                   textAlign: "left",
                 }}
               >
@@ -66,37 +58,38 @@ const SidebarSection = ({
           </Button>
         </Link>
       ))}
-      <Typography fontWeight={"bold"} variant="subtitle2" sx={{ ml: 2, mt: 2 }}>
-        供應鏈
-      </Typography>
+
       <Divider
         variant="middle"
         sx={{
-          mb: 1,
-          backgroundColor: "#FFF",
+          width: sidebarCollapsed ? "40px" : "110px",
+          height: "3px",
+          backgroundColor: "#223540",
         }}
       />
+
+      <Typography fontWeight={"bold"} variant="subtitle2" sx={{ ml: 2, mt: 2 }}>
+        供應鏈
+      </Typography>
       {traceability.map((idx) => (
         <Link key={idx.link} to={`${idx.link}`}>
           <Button
             variant="outlined"
             onClick={() => setSelectedPage(idx.link)}
-            size="large"
             sx={{
-              mb: 1,
               color: "#eeeeee",
-              borderColor: idx.link === selectedPage ? "grey[900]" : "#1B2A32",
-              opacity: idx.link === selectedPage ? "1" : "0.6",
+              borderColor: "#1B2A32",
+              opacity: idx.link === selectedPage ? "1" : "0.4",
             }}
           >
-            <SvgIcon>{idx.imgIcon}</SvgIcon>
+            {idx.imgIcon}
             {sidebarCollapsed ? (
               ""
             ) : (
               <Typography
                 fontWeight={"bold"}
                 variant="subtitle1"
-                sx={{ ml: 2, width: "70px", textAlign: "left" }}
+                sx={{ ml: 2, width: "65px", textAlign: "left" }}
               >
                 {idx.name}
               </Typography>
@@ -110,7 +103,6 @@ const SidebarSection = ({
             <Button
               variant="outlined"
               onClick={() => setSelectedPage(dev.link)}
-              size="large"
               sx={{
                 backgroundColor: "#FA433B",
                 borderColor: dev.link === selectedPage ? "#FA433B" : "#1B2A32",
@@ -123,7 +115,7 @@ const SidebarSection = ({
                 },
               }}
             >
-              <SvgIcon>{dev.imgIcon}</SvgIcon>
+              {dev.imgIcon}
               {sidebarCollapsed ? (
                 ""
               ) : (
@@ -132,7 +124,7 @@ const SidebarSection = ({
                   variant="subtitle1"
                   sx={{
                     ml: 2,
-                    width: "70px",
+                    width: "65px",
                     textAlign: "left",
                   }}
                 >

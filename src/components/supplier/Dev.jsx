@@ -12,7 +12,7 @@ import DialogActions from "@mui/material/DialogActions";
 
 import { CopyBlock, dracula } from "react-code-blocks";
 
-import { ethers, Contract } from "ethers";
+import { Contract, solidityPackedKeccak256 } from "ethers";
 import { RegistryContractParams } from "../";
 import { FunctionCard } from "./dev-components";
 import { ThemeProvider, createTheme } from "@mui/material";
@@ -67,32 +67,20 @@ const changeOwner = async (signer, identity, newOwner) => {
   }
 };
 
-const keccak256 = async (str) => {
-  const timeNow = new Date().getTime();
-  const strTimeNow = timeNow.toString();
-
-  let hexStrTimeNow = "0x";
-  let hexStr = "0x";
-
-  for (let i = 0; i < strTimeNow.length; i++) {
-    const charCode = strTimeNow.charCodeAt(i);
-    const hexValue = charCode.toString(16);
-
-    // Padding char to align format(e.g. 4->04(hex)).
-    hexStrTimeNow += hexValue.padStart(2, "0");
+const packedKeccak256 = async (keccak256Text) => {
+  //veriKey:
+  // ->0x62fbd41491e6e01d7f87c4ac77f4282ddac409adca4abf8e0c3a02839defcd1b
+  //SigAuth:
+  // ->0xcf933cb5a8eeb8a0765842723db654ad40b7f4db756e789518fbb2dc59f2f79e
+  try {
+    const hash = solidityPackedKeccak256(
+      ["string", "uint"],
+      [keccak256Text, 777]
+    );
+    console.log(hash);
+  } catch (error) {
+    console.log(error);
   }
-
-  for (let i = 0; i < str.length; i++) {
-    const charCode = str.charCodeAt(i);
-    const hexValue = charCode.toString(16);
-
-    hexStr += hexValue.padStart(2, "0");
-  }
-
-  // Strings are assumed to be DataHexString, otherwise it will
-  // throw. To hash UTF-8 data, see the note above.
-  const hash = ethers.keccak256(new Uint8Array([strTimeNow, hexStr]));
-  console.log(hash);
 };
 
 const addDelegate = async (
@@ -182,6 +170,7 @@ const Dev = ({ ethersSigner, ethersProvider }) => {
   const [addDelegateDelegateType, setAddDelegateDelegateType] = useState("");
   const [addDelegateDelegate, setAddDelegateDelegate] = useState("");
   const [addDelegateValidity, setAddDelegateValidity] = useState("");
+  const [keccak256Text, setkeccak256Text] = useState("");
 
   return (
     <ThemeProvider theme={theme}>
@@ -346,9 +335,17 @@ const Dev = ({ ethersSigner, ethersProvider }) => {
         />
         <FunctionCard
           cardHeader={"keccak256雜湊函數"}
+          cardContent={
+            <TextField
+              onChange={(e) => {
+                setkeccak256Text(e.target.value);
+              }}
+              label="text(string)"
+            />
+          }
           onClick={async () => {
             setLoading(true);
-            await keccak256("testjas;ldfjkl;aker");
+            await packedKeccak256(keccak256Text);
             setLoading(false);
           }}
           loading={loading}

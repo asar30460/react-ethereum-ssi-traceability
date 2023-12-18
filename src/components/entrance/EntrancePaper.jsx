@@ -45,13 +45,16 @@ const EntrancePaper = ({
     console.error("Direct to queryPage");
   };
 
+  let provider;
+  let signer;
   useEffect(() => {
     async function getBrowserInfo() {
       try {
-        let provider = new ethers.BrowserProvider(window.ethereum);
-        let signer = await provider.getSigner();
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
         setMetaMaskChecker(true);
         setCurrentMetaMaskAccount(signer["address"]);
+        provider.destroy();
       } catch (error) {
         setCurrentMetaMaskAccount(
           "未偵測到你的瀏覽器有安裝MetaMask擴充套件，或是你尚未在MetaMask登入任何帳戶。"
@@ -175,6 +178,7 @@ const EntrancePaper = ({
                       disabled={MetaMaskChecker ? false : true}
                       onClick={() => {
                         setProperLogin(true);
+                        setOpen(false);
                         navigate("/supplier");
                       }}
                     >

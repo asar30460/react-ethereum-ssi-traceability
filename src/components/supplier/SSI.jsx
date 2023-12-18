@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   UnselectedSSI,
+  DialogAddDelegate,
   queryIdentityOwner,
   queryDIDOwnerChangedTo,
   queryDIDDelegateTo,
   queryDIDDelegateChangedEvents,
-  documentResolver,
 } from "./ssi-components";
 
 // Materials
@@ -16,6 +16,7 @@ import {
   Chip,
   Divider,
   FormControl,
+  IconButton,
   InputLabel,
   Grid,
   LinearProgress,
@@ -30,59 +31,57 @@ import {
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import InfoIcon from "@mui/icons-material/Info";
-import SearchIcon from "@mui/icons-material/Search";
 import SendIcon from "@mui/icons-material/Send";
 
 const SSI = ({ ethersSigner }) => {
-  const [openDialogCreateSSI, setOpenDialogCreateSSI] = useState(false);
-  const [mode, setMode] = useState("default");
+  const [mode, setMode] = useState("default"); //SSI resource
   const [optionlist, setoptionlist] = useState([
     { did: `did:ethr:${ethersSigner["address"]}` },
   ]);
   const [loading, setLoading] = useState(false);
   const [docDID, setDocDID] = useState("");
   const [isOwnerChanged, setIsOwnerChanged] = useState(false);
-  const [docVerificationMethod, setDocVerificationMethod] = useState("");
   const [docAuthentication, setDocAuthentication] = useState("");
+  const [docVerificationMethod, setDocVerificationMethod] = useState([]);
+  const [idx_veri, setIdx_veri] = useState(0);
+  const [loading_veri, setLoading_veri] = useState(true);
 
-  const delay = async (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
+  // Config for dialog
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-
     const fetchData = async () => {
-      await delay(650);
+      setIdx_veri(0);
       let list = [];
       switch (mode) {
         case "default":
           list = [ethersSigner["address"]];
           setoptionlist(list);
           setDocDID(list[0]);
-          queryIdentityOwner(ethersSigner, ethersSigner["address"]).then(
+          await queryIdentityOwner(ethersSigner, ethersSigner["address"]).then(
             (result) => {
               if (result !== ethersSigner["address"]) {
                 setIsOwnerChanged(true);
               }
-              setDocAuthentication(result);
             }
           );
           break;
         case "others":
-          queryDIDOwnerChangedTo(ethersSigner).then((result) => {
+          await queryDIDOwnerChangedTo(ethersSigner).then((result) => {
             setoptionlist(result);
             setDocDID(result[0]);
           });
           break;
         case "delegate":
-          queryDIDDelegateTo(ethersSigner).then((result) => {
+          await queryDIDDelegateTo(ethersSigner).then((result) => {
             setoptionlist(result);
             setDocDID(result[0]);
           });
@@ -90,7 +89,6 @@ const SSI = ({ ethersSigner }) => {
         default:
           break;
       }
-      await delay(50);
       setLoading(false);
     };
 
@@ -98,10 +96,23 @@ const SSI = ({ ethersSigner }) => {
   }, [mode]);
 
   useEffect(() => {
-    queryDIDDelegateChangedEvents(ethersSigner, docDID).then((result) => {
-      if (result.length > 0) setDocVerificationMethod(result);
-      console.log(docVerificationMethod);
-    });
+    setLoading_veri(true);
+    setIdx_veri(0);
+
+    const fetchData = async () => {
+      await queryIdentityOwner(ethersSigner, docDID).then((result) => {
+        setDocAuthentication(result);
+      });
+
+      await queryDIDDelegateChangedEvents(ethersSigner, docDID).then(
+        (result) => {
+          setDocVerificationMethod(result);
+        }
+      );
+      setLoading_veri(false);
+    };
+
+    fetchData();
   }, [docDID]);
 
   const SSIDocSource = [
@@ -110,23 +121,11 @@ const SSI = ({ ethersSigner }) => {
     { text: "受委任DID", mode: "delegate" },
   ];
 
-  const DIDDocument = {
-    verificationMethod: [
-      {
-        id: "did:ethr:0xb9c5714089478a327f09197987f16f9e5d936e8a#controller",
-        type: "EcdsaSecp256k1RecoveryMethod2020",
-        controller: "did:ethr:0xb9c5714089478a327f09197987f16f9e5d936e8a",
-        blockchainAccountId:
-          "eip155:1:0xb9c5714089478a327f09197987f16f9e5d936e8a",
-      },
-    ],
-  };
-
   return (
     <Stack gap={1} alignItems="flex-start">
       <Divider
         sx={{
-          minWidth: { sx: "100%", md: "744px" },
+          minWidth: { sx: "100%", md: "720px" },
           width: "100%",
           "&::before, &::after": {
             borderColor: "#E0E0E0",
@@ -170,7 +169,7 @@ const SSI = ({ ethersSigner }) => {
             sx={{
               backgroundColor: "#1B2A32",
               color: source.mode === mode ? "#E0E0E0" : "grey",
-              borderRadius: "0px",
+              borderRadius: "3px",
               border: source.mode === mode ? "1px solid #1976d2" : "",
               "&:hover": {
                 backgroundColor: "#1B2A32",
@@ -185,6 +184,7 @@ const SSI = ({ ethersSigner }) => {
       <Stack direction="row" alignItems="center">
         <Box
           sx={{
+            zIndex: 2,
             px: 1,
             py: 0.5,
             backgroundColor: "#1F1F1F",
@@ -202,31 +202,33 @@ const SSI = ({ ethersSigner }) => {
           display: "flex",
           alignItems: "flex-end",
           backgroundColor: "#1B2A32",
+          borderRadius: "3px",
         }}
       >
         <InputLabel
+          id="did-select-label"
           sx={{
+            display: "flex",
+            backgroundColor: "#223540",
             color: "#E0E0E0",
           }}
         >
           DID
         </InputLabel>
         <Select
-          label="DID"
-          disabled={loading}
+          labelId="did-select-label"
+          id="did-select"
           value={docDID}
+          disabled={loading}
           onChange={(e) => {
             setDocDID(e.target.value);
           }}
           sx={{
             color: "#E0E0E0",
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderRadius: "0px",
-            },
             "&:hover .MuiOutlinedInput-notchedOutline": {
               borderColor: "#1976d2",
-              borderRadius: "0px",
-              borderWidth: "0.15rem",
+              borderRadius: "3px",
+              borderWidth: "0.1rem",
             },
             ".MuiSelect-icon": {
               color: loading ? "#1B2A32" : "#E0E0E0",
@@ -280,13 +282,22 @@ const SSI = ({ ethersSigner }) => {
           }}
         />
       </Divider>
-      <TableContainer component={Paper} sx={{ backgroundColor: "#1b2a32" }}>
+
+      <Paper
+        sx={{
+          backgroundColor: "#1b2a32",
+          color: "#E0E0E0",
+          width: "100%",
+        }}
+      >
         {loading ? (
-          <LinearProgress />
+          <LinearProgress
+            sx={{ borderTopLeftRadius: 2, borderTopRightRadius: 2 }}
+          />
         ) : (
-          <Box sx={{ minHeight: "4px", width: "100%" }}></Box>
+          <Box sx={{ minHeight: "4px", width: "100%" }} />
         )}
-        <Table aria-label="simple table">
+        <Box sx={{ opacity: loading || loading_veri ? 0.5 : 1 }}>
           {(optionlist[0] === "無委任資料") |
           (optionlist[0] === "無其它DID資料") ? (
             <UnselectedSSI />
@@ -307,143 +318,241 @@ const SSI = ({ ethersSigner }) => {
                 </Box>
               ) : null}
 
-              <TableBody>
-                <TableRow
+              <Box sx={{ px: 3, py: 2 }}>
+                <Typography
+                  fontWeight={"bold"}
+                  variant="subtitle2"
                   sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    backgroundColor: "#1b2a32",
+                    mt: -0.5,
+                    mb: 1,
                   }}
                 >
-                  <TableCell component="th" scope="row">
-                    <Typography
-                      fontWeight={"bold"}
-                      variant="subtitle2"
+                  @context
+                </Typography>
+                <Typography variant="body2">
+                  https://www.w3.org/ns/did/v1
+                </Typography>
+                <Typography variant="body2">
+                  https://w3id.org/security/suites/secp256k1recovery-2020/v2
+                </Typography>
+              </Box>
+              <Divider sx={{ border: "2px solid #223540" }} />
+              <Box sx={{ px: 3, py: 2 }}>
+                <Typography
+                  fontWeight={"bold"}
+                  variant="subtitle2"
+                  sx={{ mb: 1 }}
+                >
+                  id
+                </Typography>
+                <Typography variant="body2">did:ethr:{docDID}</Typography>
+              </Box>
+              <Divider sx={{ border: "2px solid #223540" }} />
+              <Box sx={{ px: 3, py: 2 }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{ mb: 1, fontWeight: "bold" }}
+                >
+                  authentication
+                </Typography>
+                <Typography variant="body2">
+                  {`${docAuthentication}#controller`}
+                </Typography>
+              </Box>
+              <Divider sx={{ border: "2px solid #223540" }} />
+              <Box
+                display="flex"
+                flexDirection="column"
+                minHeight={"304px"}
+                sx={{ px: 3, py: 2 }}
+              >
+                <Stack direction={"row"} justifyContent="space-between">
+                  <Typography
+                    fontWeight={"bold"}
+                    variant="subtitle2"
+                    sx={{ mb: 1 }}
+                  >
+                    verificationMethod
+                  </Typography>
+                  <Box display="flex" alignItems={"center"} sx={{ mt: -1 }}>
+                    <IconButton
+                      aria-label="lastpage"
+                      size="small"
+                      disabled={idx_veri === 0}
+                      onClick={() => {
+                        setIdx_veri(idx_veri - 1);
+                      }}
                       sx={{
-                        mt: -0.5,
-                        mb: 1,
+                        backgroundColor: "#223540",
+                        color: "#E0E0E0",
+                        "&:hover": {
+                          backgroundColor: "#223540",
+                          color: "#FFF",
+                        },
+                        "&.Mui-disabled": {
+                          color: "#707070",
+                        },
                       }}
                     >
-                      @context
+                      <ChevronLeftIcon />
+                    </IconButton>
+                    <Typography variant="body2" sx={{ ml: 1 }}>
+                      項目{idx_veri + 1}，總共{docVerificationMethod.length}
+                      &nbsp;&nbsp;
                     </Typography>
-                    <div>{"https://www.w3.org/ns/did/v1"}</div>
-                    {
-                      "https://w3id.org/security/suites/secp256k1recovery-2020/v2"
-                    }
-                  </TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    backgroundColor: "#1b2a32",
-                  }}
+                    <IconButton
+                      aria-label="nextpage"
+                      size="small"
+                      color="info"
+                      disabled={idx_veri === docVerificationMethod.length - 1}
+                      onClick={() => {
+                        setIdx_veri(idx_veri + 1);
+                      }}
+                      sx={{
+                        backgroundColor: "#223540",
+                        color: "#E0E0E0",
+                        "&:hover": {
+                          backgroundColor: "#223540",
+                          color: "#FFF",
+                        },
+                        "&.Mui-disabled": {
+                          color: "#707070",
+                        },
+                      }}
+                    >
+                      <ChevronRightIcon />
+                    </IconButton>
+                  </Box>
+                </Stack>
+
+                <Table>
+                  {loading_veri ? (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>Loading...</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  ) : (
+                    <TableBody>
+                      {idx_veri === 0 ? (
+                        <>
+                          <TableRow>
+                            <TableCell>id</TableCell>
+                            <TableCell>
+                              did:ethr:
+                              {docVerificationMethod[0].id}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>type</TableCell>
+                            <TableCell>
+                              {docVerificationMethod[0].type}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>controller</TableCell>
+                            <TableCell>
+                              {docVerificationMethod[0].controller}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              blockchain
+                              <br />
+                              -AccountId
+                            </TableCell>
+                            <TableCell>
+                              {docVerificationMethod[0].blockchainAccountId}
+                            </TableCell>
+                          </TableRow>
+                        </>
+                      ) : (
+                        <>
+                          <TableRow>
+                            <TableCell>id</TableCell>
+                            <TableCell>
+                              did:ethr:
+                              {docVerificationMethod[idx_veri].identity}
+                              -delagate
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>type</TableCell>
+                            <TableCell>
+                              {docVerificationMethod[
+                                idx_veri
+                              ].delegateType.charAt(3) === "6"
+                                ? "veriKey"
+                                : "sigAuth"}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>controller</TableCell>
+                            <TableCell>
+                              did:ethr:
+                              {docVerificationMethod[idx_veri].delegate}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              blockchain
+                              <br />
+                              -AccountId
+                            </TableCell>
+                            <TableCell>
+                              eip155:1:controller's owner
+                              {}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>validTo</TableCell>
+                            <TableCell>
+                              {docVerificationMethod[idx_veri].validTo}
+                            </TableCell>
+                          </TableRow>
+                        </>
+                      )}
+                    </TableBody>
+                  )}
+                </Table>
+                <Stack
+                  direction={"row"}
+                  justifyContent="flex-end"
+                  sx={{ mt: 2 }}
                 >
-                  <TableCell component="th" scope="row">
-                    <Typography
-                      fontWeight={"bold"}
-                      variant="subtitle2"
-                      sx={{ mb: 1 }}
-                    >
-                      id
-                    </Typography>
-                    {docDID}
-                  </TableCell>
-                  <TableCell align="right" />
-                </TableRow>
-                <TableRow
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    backgroundColor: "#1b2a32",
-                  }}
-                >
-                  <TableCell component="th" scope="row">
-                    <Typography
-                      fontWeight={"bold"}
-                      variant="subtitle2"
-                      sx={{ mb: 1 }}
-                    >
-                      verificationMethod
-                    </Typography>
-                    <div>
-                      {DIDDocument.verificationMethod.map(
-                        (idx) => `id: ${idx.id}`
-                      )}
-                    </div>
-                    <div>
-                      {DIDDocument.verificationMethod.map(
-                        (idx) => `type: ${idx.type}`
-                      )}
-                    </div>
-                    <div>
-                      {DIDDocument.verificationMethod.map(
-                        (idx) => `controller: ${idx.controller}`
-                      )}
-                    </div>
-                    <div>
-                      {DIDDocument.verificationMethod.map(
-                        (idx) =>
-                          `blockchainAccountId: ${idx.blockchainAccountId}`
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell align="left">
-                    <Stack spacing={1} justifyContent="flex-end">
-                      <Button
-                        variant="outlined"
-                        startIcon={<SearchIcon />}
-                        // disabled={loading}
-                        // onClick={onClick}
-                        sx={{
-                          mr: -1,
-                          backgroundColor: "#1b2a32",
-                          color: "#E0E0E0",
-                          borderColor: "#1C7AC7",
-                          "&:hover": {
-                            backgroundColor: "#1C7AC7",
-                            color: "#FFF",
-                            borderColor: "#1C7AC7",
-                          },
-                        }}
-                      >
-                        查看歷史紀錄
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        startIcon={<SendIcon />}
-                        // disabled={loading}
-                        // onClick={onClick}
-                        sx={{
-                          mr: -1,
-                          backgroundColor: "#1b2a32",
-                          color: "#E0E0E0",
-                          borderColor: "#D84315",
-                          "&:hover": {
-                            backgroundColor: "#D84315",
-                            color: "#FFF",
-                            borderColor: "#D84315",
-                          },
-                        }}
-                      >
-                        新增委任權限
-                      </Button>
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ mb: 1, fontWeight: "bold" }}
-                    >
-                      authentication
-                    </Typography>
-                    {`${docAuthentication}#controller`}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+                  <Button
+                    variant="outlined"
+                    startIcon={<SendIcon />}
+                    // disabled={loading}
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                    sx={{
+                      mr: -1,
+                      backgroundColor: "#1b2a32",
+                      color: "#E0E0E0",
+                      borderColor: "#B83912",
+                      "&:hover": {
+                        backgroundColor: "#B83912",
+                        color: "#FFF",
+                        borderColor: "#D84315",
+                      },
+                    }}
+                  >
+                    新增委任權限
+                  </Button>
+                  <DialogAddDelegate
+                    ethersSigner={ethersSigner}
+                    open={open}
+                    setOpen={setOpen}
+                    docDID={docDID}
+                  />
+                </Stack>
+              </Box>
             </>
           )}
-        </Table>
-      </TableContainer>
+        </Box>
+      </Paper>
     </Stack>
   );
 };

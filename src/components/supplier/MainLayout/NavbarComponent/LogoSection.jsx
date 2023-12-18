@@ -15,17 +15,13 @@ const LogoSection = ({ setSelectedPage }) => {
       }}
       component={Link}
       to="."
-      sx={{ display: { xs: "none", md: "inline-flex" }, mr: 2 }}
+      sx={{
+        mr: 2,
+        display: { xs: "none", md: "inline-flex" },
+      }}
     >
-      <CottageRoundedIcon sx={{ fontSize: 30, color: "#237A4E" }} />
-      <Typography
-        fontSize={"22px"}
-        fontWeight={"bold"}
-        letterSpacing={-1}
-        gutterBottom
-        color={"#F8FAFC"}
-        sx={{ ml: 0.5, mt: 1.5 }}
-      >
+      <CottageRoundedIcon sx={{ mr: 0.5, fontSize: 30, color: "#237A4E" }} />
+      <Typography fontSize={"22px"} fontWeight={"bold"} letterSpacing={-1}>
         供應商管理
       </Typography>
     </ButtonBase>

@@ -21,11 +21,10 @@ const SupplierPage = () => {
 
   const [isInitCompeleted, setIsInitCompeleted] = useState(false);
 
+  let provider;
+  let signer;
   useEffect(() => {
     const init = async () => {
-      let provider;
-      let signer;
-
       try {
         provider = new ethers.BrowserProvider(window.ethereum);
         signer = await provider.getSigner();
@@ -64,14 +63,26 @@ const SupplierPage = () => {
             alignItems="flex-start"
             sx={{
               display: "flex",
+              justifyContent: "center",
               zIndex: 3,
-              flexGrow: 0.98,
+              flexGrow: { xs: 1, sm: 0.94, md: 0.96, lg: 0.98 },
               overflow: "auto",
               p: 3,
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
               backgroundColor: selectedPage === "dev" ? "#1B2A32" : "#223540",
               border: selectedPage === "dev" ? "1px solid #7D231E" : "0px",
+              "&::-webkit-scrollbar": {
+                width: 12,
+              },
+              "&::-webkit-scrollbar-track": {
+                borderTopRightRadius: 10,
+                backgroundColor: "#2B4452",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                borderTopRightRadius: 10,
+                backgroundColor: "#162229",
+              },
             }}
           >
             <Routes>

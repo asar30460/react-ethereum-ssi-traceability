@@ -14,9 +14,7 @@ export async function queryIdentityOwner(provider, identity) {
     const result = await contract.identityOwner(identity);
 
     return result;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 }
 
 export async function queryDIDOwnerChangedTo(ethersSigner) {
@@ -45,8 +43,10 @@ export async function queryDIDOwnerChangedTo(ethersSigner) {
 
   // Check identity owner didn't change to others, evev if you used to be owner.
   for (let i = 0; i < list.length; i++) {
-    queryIdentityOwner(ethersSigner, list[i]).then((result) => {
-      if (result !== ethersSigner["address"]) list.splice(list[i]);
+    await queryIdentityOwner(ethersSigner, list[i]).then((result) => {
+      // console.log(result);
+      // console.log(ethersSigner["address"]);
+      if (result !== ethersSigner["address"]) list.splice(i, 1);
     });
   }
 
@@ -68,7 +68,10 @@ export async function queryDIDDelegateTo(ethersSigner) {
   for (let i = 0; i < events.length; i++) {
     // console.log(`events[${i}] detail:`);
     // console.log(events[i]);
-    if (events[i].args[2] === ethersSigner["address"])
+    if (
+      events[i].args[2] === ethersSigner["address"] &&
+      Number(events[i].args[3]) - 1 > Date.now() / 1000
+    )
       list.push(events[i].args[0]);
     // list.push({ did: `did:ethr:${events[i].args[2]}` });
   }
@@ -88,22 +91,28 @@ export async function queryDIDDelegateChangedEvents(ethersSigner, identity) {
   const events = await contract.queryFilter(filter);
   // console.log(`Length of owner delegation events: ${events.length}`);
 
-  let result = [];
+  const owner = await queryIdentityOwner(ethersSigner, identity);
+  let result = [
+    {
+      id: `did:ethr:${owner}#controller`,
+      type: "EcdsaSecp256k1RecoveryMethod2020",
+      controller: `did:ethr:${owner}`,
+      blockchainAccountId: `eip155:1:${owner}`,
+    },
+  ];
   for (let i = 0; i < events.length; i++) {
-    let temp = [];
     if (
       events[i].args[0] === identity &&
-      Number(events[i].args[3]) - 1 < Date.now() / 1000
+      Number(events[i].args[3]) - 1 > Date.now() / 1000
     ) {
-      temp.push(events[i].args[0]);
-      temp.push(events[i].args[1]);
-      temp.push(events[i].args[2]);
-
-      result.push(temp);
+      result.push({
+        identity: events[i].args[0],
+        delegateType: events[i].args[1],
+        delegate: events[i].args[2],
+        validTo: Number(events[i].args[3]),
+      });
     }
   }
-
-  if (events.length === 0) return;
   return result;
 }
 

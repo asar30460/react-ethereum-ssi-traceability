@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from "react";
-import { Box, Divider, Grid, Stack, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { FeedCard } from "./feed-components";
 
 function createData(title, chHeader, value) {
@@ -45,9 +45,15 @@ const Feed = ({ ethersProvider, ethersSigner }) => {
         ),
       ]);
     }
-    fetchEthersInfo(); // For first rendering.
-    setInterval(() => fetchEthersInfo(), 1000);
-  });
+    fetchEthersInfo(); // For first rendering
+
+    // Update per second
+    const interval = setInterval(() => {
+      fetchEthersInfo();
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [ethersProvider]);
 
   return (
     <Grid
