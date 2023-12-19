@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Contract, solidityPackedKeccak256 } from "ethers";
+import { BaseContract, solidityPackedKeccak256 } from "ethers";
 import { queryDIDDelegateChangedEvents } from "./documentResolver";
 
 import { ThemeProvider, createTheme } from "@mui/material";
@@ -7,6 +7,7 @@ import {
   Button,
   FormControl,
   Grid,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -20,7 +21,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 
-import UndoIcon from "@mui/icons-material/Undo";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 
 const addDelegate = async (
@@ -61,7 +62,7 @@ const addDelegate = async (
     "function addDelegate(address identity, bytes32 delegateType, address delegate, uint validity)",
   ];
   const contractAddress = process.env.REACT_APP_DID_REGISTRY;
-  const contract = new Contract(contractAddress, abi, signer);
+  const contract = new BaseContract(contractAddress, abi, signer);
   try {
     const tx = await contract.addDelegate(
       identity,
@@ -121,13 +122,15 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
       MuiInput: {
         styleOverrides: {
           underline: {
+            "&&:before": {
+              borderColor: "#ff9800",
+            },
             "&&:hover::before": {
               borderColor: "#ff9800",
             },
           },
           input: {
             color: "#E0E0E0",
-            borderBottom: "1px solid #E0E0E0",
             fontSize: "14px",
             fontFamily: "Noto Serif TC",
           },
@@ -176,6 +179,7 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
               類別
             </InputLabel>
             <Select
+              required
               labelId="delegate-type-select-label"
               id="delegate-type-select"
               value={delegateType}
@@ -213,19 +217,32 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
           <Grid container>
             <Grid item xs={12} sm={8}>
               <TextField
+                required
+                id="delegate-did"
+                label="委任對象（DID）"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography variant="body2" color={"#E0E0E0"}>
+                        did:ethr:
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                }}
                 onChange={(e) => {
                   setDelegate(e.target.value);
                 }}
-                label="委任對象（DID）"
                 sx={{ width: { sm: "350px" } }}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
+                required
+                id="delegate-valid"
+                label="委任時長（秒）"
                 onChange={(e) => {
                   setValidity(e.target.value);
                 }}
-                label="委任時長（秒）"
                 sx={{ minWidth: { sm: "150px" } }}
               />
             </Grid>
@@ -234,18 +251,17 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
         <DialogActions>
           <Button
             variant="outlined"
-            startIcon={<UndoIcon />}
+            startIcon={<DeleteIcon />}
             disabled={loading}
             onClick={() => setOpen(false)}
             sx={{
-              mt: -1,
-              mb: 1,
-              backgroundColor: "#1b2a32",
+              backgroundColor: "transparent",
+              color: "#1E88E5",
               borderColor: "#1E88E5",
-              color: "#E0E0E0",
               "&:hover": {
                 backgroundColor: "#1E88E5",
                 color: "#FFF",
+                borderColor: "#1E88E5",
               },
             }}
           >
@@ -253,7 +269,7 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
           </Button>
           <Button
             variant="outlined"
-            startIcon={<SendIcon />}
+            endIcon={<SendIcon />}
             disabled={loading}
             onClick={async () => {
               setLoading(true);
@@ -268,11 +284,8 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
               setLoading(false);
             }}
             sx={{
-              mt: -1,
-              mb: 1,
-              mr: 2,
-              backgroundColor: "#1b2a32",
-              color: "#E0E0E0",
+              backgroundColor: "transparent",
+              color: "#FF4719",
               borderColor: "#D84315",
               "&:hover": {
                 backgroundColor: "#D84315",

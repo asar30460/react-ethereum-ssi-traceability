@@ -1,5 +1,5 @@
 export { default as UnselectedSSI } from "./UnselectedSSI";
-export { default as DialogCreateSSI } from "./DialogCreateSSI";
+export { default as DialogChangeOwner } from "./DialogChangeOwner";
 export { default as DialogAddDelegate } from "./DialogAddDelegate";
 export {
   queryIdentityOwner,

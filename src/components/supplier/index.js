@@ -77,11 +77,11 @@ const SupplierPage = () => {
               },
               "&::-webkit-scrollbar-track": {
                 borderTopRightRadius: 10,
-                backgroundColor: "#2B4452",
+                backgroundColor: "#162229",
               },
               "&::-webkit-scrollbar-thumb": {
                 borderTopRightRadius: 10,
-                backgroundColor: "#162229",
+                backgroundColor: "#2B4452",
               },
             }}
           >

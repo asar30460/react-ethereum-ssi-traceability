@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   UnselectedSSI,
+  DialogChangeOwner,
   DialogAddDelegate,
   queryIdentityOwner,
   queryDIDOwnerChangedTo,
@@ -39,6 +40,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import InfoIcon from "@mui/icons-material/Info";
 import SendIcon from "@mui/icons-material/Send";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
 const SSI = ({ ethersSigner }) => {
   const [mode, setMode] = useState("default"); //SSI resource
@@ -54,7 +56,8 @@ const SSI = ({ ethersSigner }) => {
   const [loading_veri, setLoading_veri] = useState(true);
 
   // Config for dialog
-  const [open, setOpen] = useState(false);
+  const [openChangeOwner, setOpenChangeOwner] = useState(false);
+  const [openDelegate, setOpenDelegate] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -126,7 +129,6 @@ const SSI = ({ ethersSigner }) => {
       <Divider
         sx={{
           minWidth: { sx: "100%", md: "720px" },
-          width: "100%",
           "&::before, &::after": {
             borderColor: "#E0E0E0",
           },
@@ -306,10 +308,8 @@ const SSI = ({ ethersSigner }) => {
               {isOwnerChanged && mode === "default" ? (
                 <Box
                   display="inline-flex"
-                  direction="row"
-                  alignItems="center"
                   borderRadius="3px"
-                  sx={{ p: 1, mb: 1, backgroundColor: "#A13210" }}
+                  sx={{ p: 1, mx: 3, mt: 1, backgroundColor: "#A13210" }}
                 >
                   <InfoIcon />
                   <Typography variant="body2">
@@ -438,10 +438,7 @@ const SSI = ({ ethersSigner }) => {
                         <>
                           <TableRow>
                             <TableCell>id</TableCell>
-                            <TableCell>
-                              did:ethr:
-                              {docVerificationMethod[0].id}
-                            </TableCell>
+                            <TableCell>{docVerificationMethod[0].id}</TableCell>
                           </TableRow>
                           <TableRow>
                             <TableCell>type</TableCell>
@@ -490,7 +487,7 @@ const SSI = ({ ethersSigner }) => {
                             <TableCell>controller</TableCell>
                             <TableCell>
                               did:ethr:
-                              {docVerificationMethod[idx_veri].delegate}
+                              {docVerificationMethod[idx_veri].controller}
                             </TableCell>
                           </TableRow>
                           <TableRow>
@@ -500,8 +497,8 @@ const SSI = ({ ethersSigner }) => {
                               -AccountId
                             </TableCell>
                             <TableCell>
-                              eip155:1:controller's owner
-                              {}
+                              eip155:1:
+                              {docVerificationMethod[idx_veri].controller}
                             </TableCell>
                           </TableRow>
                           <TableRow>
@@ -515,44 +512,95 @@ const SSI = ({ ethersSigner }) => {
                     </TableBody>
                   )}
                 </Table>
-                <Stack
-                  direction={"row"}
-                  justifyContent="flex-end"
-                  sx={{ mt: 2 }}
-                >
-                  <Button
-                    variant="outlined"
-                    startIcon={<SendIcon />}
-                    // disabled={loading}
-                    onClick={() => {
-                      setOpen(true);
-                    }}
-                    sx={{
-                      mr: -1,
-                      backgroundColor: "#1b2a32",
-                      color: "#E0E0E0",
-                      borderColor: "#B83912",
-                      "&:hover": {
-                        backgroundColor: "#B83912",
-                        color: "#FFF",
-                        borderColor: "#D84315",
-                      },
-                    }}
-                  >
-                    新增委任權限
-                  </Button>
-                  <DialogAddDelegate
-                    ethersSigner={ethersSigner}
-                    open={open}
-                    setOpen={setOpen}
-                    docDID={docDID}
-                  />
-                </Stack>
               </Box>
             </>
           )}
         </Box>
       </Paper>
+      {mode !== "delegate" ? (
+        <>
+          <Divider
+            sx={{
+              my: 1,
+              zIndex: 1,
+              minWidth: "100%",
+              "&::before, &::after": {
+                borderColor: "#E0E0E0",
+              },
+            }}
+          >
+            <Chip
+              icon={<PriorityHighIcon color="#E0E0E0" />}
+              label="身分相關功能異動"
+              sx={{
+                p: 1,
+                backgroundColor: "#7D231E",
+                color: "#E0E0E0",
+                fontSize: "16px",
+                fontWeight: "bold",
+              }}
+            />
+          </Divider>
+          <Stack direction={"row"} gap={2}>
+            <Box>
+              <Button
+                variant="outlined"
+                endIcon={<SendIcon />}
+                disabled={loading}
+                onClick={() => {
+                  setOpenChangeOwner(true);
+                }}
+                sx={{
+                  backgroundColor: "#1b2a32",
+                  color: "#E0E0E0",
+                  borderColor: "#D84315",
+                  "&:hover": {
+                    backgroundColor: "#D84315",
+                    color: "#FFF",
+                    borderColor: "#D84315",
+                  },
+                }}
+              >
+                變更身分擁有者
+              </Button>
+              <DialogChangeOwner
+                ethersSigner={ethersSigner}
+                open={openChangeOwner}
+                setOpen={setOpenChangeOwner}
+                docDID={docDID}
+              />
+            </Box>
+            <Box>
+              <Button
+                variant="outlined"
+                endIcon={<SendIcon />}
+                disabled={loading}
+                onClick={() => {
+                  setOpenDelegate(true);
+                }}
+                sx={{
+                  backgroundColor: "#1b2a32",
+                  color: "#E0E0E0",
+                  borderColor: "#D84315",
+                  "&:hover": {
+                    backgroundColor: "#D84315",
+                    color: "#FFF",
+                    borderColor: "#D84315",
+                  },
+                }}
+              >
+                新增委任權限
+              </Button>
+              <DialogAddDelegate
+                ethersSigner={ethersSigner}
+                open={openDelegate}
+                setOpen={setOpenDelegate}
+                docDID={docDID}
+              />
+            </Box>
+          </Stack>
+        </>
+      ) : null}
     </Stack>
   );
 };

@@ -16,7 +16,7 @@ export const navlinks = {
 
   traceability: [
     {
-      name: "SSI 設置",
+      name: "SSI 管理",
       imgIcon: <SwitchAccountIcon />,
       link: "ssi-management",
     },
@@ -29,7 +29,7 @@ export const navlinks = {
 
   dev: [
     {
-      name: "開發頁面",
+      name: "開發工具",
       imgIcon: <LogoDevIcon />,
       link: "dev",
     },

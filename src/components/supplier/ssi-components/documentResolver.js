@@ -26,17 +26,20 @@ export async function queryDIDOwnerChangedTo(ethersSigner) {
 
   const filter = contract.filters.DIDOwnerChanged;
   const events = await contract.queryFilter(filter);
-
   // console.log(`Length of owner changed events: ${events.length}`);
 
   let list = [];
-
   // 確認是否轉移
   for (let i = 0; i < events.length; i++) {
     // console.log(`events[${i}] detail:`);
     // console.log(events[i]);
     if (events[i].args[1] === ethersSigner["address"]) {
       // console.log(`Identity owner is changed. Address:${events[i].args[1]}`);
+
+      // prevent from following condition: A->B; B->A; A->B
+      // This will cause duplicate data in list
+      const finder = list.find((element) => element === events[i].args[0]);
+      if (finder) continue;
       list.push(events[i].args[0]);
     }
   }
@@ -105,10 +108,15 @@ export async function queryDIDDelegateChangedEvents(ethersSigner, identity) {
       events[i].args[0] === identity &&
       Number(events[i].args[3]) - 1 > Date.now() / 1000
     ) {
+      const controller = await queryIdentityOwner(
+        ethersSigner,
+        events[i].args[2]
+      );
       result.push({
         identity: events[i].args[0],
         delegateType: events[i].args[1],
         delegate: events[i].args[2],
+        controller: controller,
         validTo: Number(events[i].args[3]),
       });
     }
