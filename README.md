@@ -1,25 +1,35 @@
-# Getting Started with Create React App
+# React Ethereum SSI Traceability
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with CRA. Simply complianted with ERC-1056 standard to implement basic SSI operations and have a simple testing traceability scenerio.<br><br>
+Warning: The devlopement of this project is in progress, and so is this doc.
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+After cloning this project, you must run the following instructions:
 
-### `npm start`
+1. Create "yarn.lock" in directory.
+2. Run `yarn install` to install all necessary dependencies.
+3. Go https://app.tryethernal.com/ sign up an account and create a project. After that, edit ".env" add your **ETHERNAL_API_TOKEN** and **ETHERNAL_EMAIL**.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+REACT_APP_DID_REGISTRY=0xabcdef123456...
+ETHERNAL_API_TOKEN=eyAbC123Def456...
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+4. Install Metamask extension in your browser.
+5. Run `yarn start` to start the project.
+6. Go to "開發工具" page to deploy ERC-1056 contract.
+7. Edit ".env" add the contract address in **REACT_APP_DID_REGISTRY**
 
-### `npm test`
+```
+REACT_APP_DID_REGISTRY=0xe7f1725e7734ce...
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+8. Restart the project.
 
-### `npm run build`
+## Legecy Doc
+
+### `yarn build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -28,43 +38,3 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
