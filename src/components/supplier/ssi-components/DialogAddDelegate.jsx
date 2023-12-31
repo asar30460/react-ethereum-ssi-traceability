@@ -26,6 +26,9 @@ import SendIcon from "@mui/icons-material/Send";
 
 const addDelegate = async (
   signer,
+  sigV,
+  sigR,
+  sigS,
   identity,
   delegateType,
   delegate,
@@ -34,6 +37,8 @@ const addDelegate = async (
   const byteDelegateType = solidityPackedKeccak256(
     ["string", "uint"],
     [delegateType, 777]
+    // veriKey: 0x62fbd41491e6e01d7f87c4ac77f4282ddac409adca4abf8e0c3a02839defcd1b
+    // sigAuth: 0xcf933cb5a8eeb8a0765842723db654ad40b7f4db756e789518fbb2dc59f2f79e
   );
   console.log({
     identity: identity,
@@ -59,13 +64,16 @@ const addDelegate = async (
   }
 
   const abi = [
-    "function addDelegate(address identity, bytes32 delegateType, address delegate, uint validity)",
+    "function addDelegateSigned(address identity, uint8 sigV, bytes32 sigR, bytes32 sigS, bytes32 delegateType, address delegate, uint validity)",
   ];
   const contractAddress = process.env.REACT_APP_DID_REGISTRY;
   const contract = new BaseContract(contractAddress, abi, signer);
   try {
-    const tx = await contract.addDelegate(
+    const tx = await contract.addDelegateSigned(
       identity,
+      sigV,
+      sigR,
+      sigS,
       byteDelegateType,
       delegate,
       Number(validity)
@@ -85,6 +93,9 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
   const [delegateType, setDelegateType] = useState("");
   const [delegate, setDelegate] = useState("");
   const [validity, setValidity] = useState();
+  const [sigV, setsigV] = useState();
+  const [sigR, setsigR] = useState();
+  const [sigS, setsigS] = useState();
 
   const customizeFontStyle = {
     styleOverrides: {
@@ -110,7 +121,6 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
         },
         styleOverrides: {
           root: {
-            minWidth: "256px",
             label: {
               color: "#E0E0E0",
               fontSize: "14px",
@@ -214,8 +224,38 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
               </MenuItem>
             </Select>
           </FormControl>
-          <Grid container>
-            <Grid item xs={12} sm={8}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={2}>
+              <TextField
+                required
+                id="delegate-sigv"
+                label="sigV"
+                onChange={(e) => {
+                  setsigV(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={5}>
+              <TextField
+                required
+                id="delegate-sigr"
+                label="sigR"
+                onChange={(e) => {
+                  setsigR(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={5}>
+              <TextField
+                required
+                id="delegate-sigs"
+                label="sigS"
+                onChange={(e) => {
+                  setsigS(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={7}>
               <TextField
                 required
                 id="delegate-did"
@@ -232,7 +272,6 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
                 onChange={(e) => {
                   setDelegate(e.target.value);
                 }}
-                sx={{ width: { sm: "350px" } }}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -243,7 +282,6 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
                 onChange={(e) => {
                   setValidity(e.target.value);
                 }}
-                sx={{ minWidth: { sm: "150px" } }}
               />
             </Grid>
           </Grid>
@@ -275,6 +313,9 @@ const DialogAddDelegate = ({ open, setOpen, ethersSigner, docDID }) => {
               setLoading(true);
               await addDelegate(
                 ethersSigner,
+                sigV,
+                sigR,
+                sigS,
                 docDID,
                 delegateType,
                 delegate,

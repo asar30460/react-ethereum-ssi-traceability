@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\TaiLe\\Desktop\\react-ethereum-traceability\\contracts\\EtherDIDRegistrySignedOnly.sol": {
+      "lastModificationDate": 1703663210577,
+      "contentHash": "36a97fb98a6b1192117bd71a62488ce8",
+      "sourceName": "contracts/EtherDIDRegistrySignedOnly.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "EtherDIDRegistrySignedOnly"
+      ]
+    }
+  }
+}
