@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { ethers } from "ethers";
+
 import { Button, ButtonBase, Stack, TextField } from "@mui/material";
 import ArticleIcon from "@mui/icons-material/Article";
 import CodeIcon from "@mui/icons-material/Code";
@@ -45,6 +47,22 @@ const identityOwnerQuery = async (provider, identity) => {
   try {
     const contract = new Contract(contractAddress, abi, provider);
     const result = await contract.identityOwner(identity);
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const nonceQuery = async (provider, identity) => {
+  // The contract ABI (fragments we care about)
+  const abi = ["function getNonce(address identity) view returns (uint)"];
+
+  // Connected to a Signer; can make state changing transactions,
+  // which will cost the account ether
+  const contractAddress = process.env.REACT_APP_DID_REGISTRY;
+  try {
+    const contract = new Contract(contractAddress, abi, provider);
+    const result = await contract.getNonce(identity);
     console.log(result);
   } catch (error) {
     console.log(error);
@@ -115,6 +133,7 @@ const Dev = ({ ethersSigner, ethersProvider }) => {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogContent, setDialogContent] = useState("");
   const [identityOwner, setIdentityOwner] = useState("");
+  const [nonce, setNonce] = useState("");
   const [keccak256Text, setkeccak256Text] = useState("");
 
   return (
@@ -244,6 +263,26 @@ const Dev = ({ ethersSigner, ethersProvider }) => {
           onClick={async () => {
             setLoading(true);
             identityOwnerQuery(ethersProvider, identityOwner);
+            setLoading(false);
+          }}
+          loading={loading}
+        />
+
+        <FunctionCard
+          isDIDFunction
+          readOnly
+          cardHeader={"查詢nonce"}
+          cardContent={
+            <TextField
+              onChange={(e) => {
+                setNonce(e.target.value);
+              }}
+              label="eoa(address)"
+            />
+          }
+          onClick={async () => {
+            setLoading(true);
+            await nonceQuery(ethersProvider, nonce);
             setLoading(false);
           }}
           loading={loading}
