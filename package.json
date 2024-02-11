@@ -37,6 +37,7 @@
     ]
   },
   "devDependencies": {
+    "hardhat": "^2.19.3",
     "hardhat-ethernal": "^3.2.5"
   }
 }
