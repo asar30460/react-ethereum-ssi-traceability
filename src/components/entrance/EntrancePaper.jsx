@@ -49,6 +49,7 @@ const EntrancePaper = ({
   let signer;
   useEffect(() => {
     async function getBrowserInfo() {
+      console.log("MetaMaskChecker: ", MetaMaskChecker);
       try {
         provider = new ethers.BrowserProvider(window.ethereum);
         signer = await provider.getSigner();
