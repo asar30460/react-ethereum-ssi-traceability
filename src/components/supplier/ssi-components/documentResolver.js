@@ -13,6 +13,7 @@ export async function queryIdentityOwner(provider, identity) {
     const contract = new Contract(contractAddress, abi, provider);
     const result = await contract.identityOwner(identity);
 
+    console.log(result);
     return result;
   } catch (error) {}
 }

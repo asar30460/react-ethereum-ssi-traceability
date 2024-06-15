@@ -69,7 +69,7 @@ const SidebarSection = ({
       />
 
       <Typography fontWeight={"bold"} variant="subtitle2" sx={{ ml: 2, mt: 2 }}>
-        供應鏈
+        應用
       </Typography>
       {traceability.map((idx) => (
         <Link key={idx.link} to={`${idx.link}`}>

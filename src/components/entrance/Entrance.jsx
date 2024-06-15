@@ -20,11 +20,14 @@ const Entrance = ({ setProperLogin }) => {
           }}
         >
           <Typography
-            sx={{ mb: 5, textAlign: "center" }}
+            sx={{ textAlign: "center" }}
             variant={"h5"}
             fontWeight={"bold"}
           >
-            以太坊產品產銷整合系統
+            以太坊去中心化識別值管理系統
+          </Typography>
+          <Typography sx={{ mb: 5, textAlign: "center" }} variant={"body2"}>
+            Ethereum Decentralized Identifier Management System
           </Typography>
           <Stack
             mt={3}
